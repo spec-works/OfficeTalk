@@ -1,0 +1,8 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[1]
+APPEND " (see Appendix A)"
+
+AT body/paragraph[2]
+PREPEND "UPDATED: "

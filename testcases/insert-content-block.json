@@ -1,0 +1,20 @@
+{
+  "name": "insert-content-block",
+  "description": "INSERT BEFORE with multi-line content block",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[text=\"Conclusion\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_BEFORE",
+          "content": "This new section appears just before the Conclusion.\n\nIt has multiple paragraphs."
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

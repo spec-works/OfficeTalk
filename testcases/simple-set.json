@@ -1,0 +1,20 @@
+{
+  "name": "simple-set",
+  "description": "Minimal document with a single SET operation",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        {
+          "type": "SET",
+          "content": "Hello, World!"
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

@@ -1,0 +1,17 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[text="Exact match"]
+DELETE
+
+AT body/paragraph[text*="contains this"]
+DELETE
+
+AT body/paragraph[text^="Starts with"]
+DELETE
+
+AT body/paragraph[text$="ends with this."]
+DELETE
+
+AT body/paragraph[text~="^Chapter \d+"]
+DELETE

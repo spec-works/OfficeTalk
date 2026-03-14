@@ -1,0 +1,20 @@
+{
+  "name": "style-operation",
+  "description": "STYLE operation applying a named style",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[5]",
+      "each": false,
+      "operations": [
+        {
+          "type": "STYLE",
+          "styleName": "Heading 2"
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

@@ -1,0 +1,4 @@
+DOCTYPE word
+
+AT body/paragraph[1]
+SET "Hello"

@@ -1,0 +1,30 @@
+{
+  "name": "append-prepend",
+  "description": "APPEND and PREPEND operations",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        {
+          "type": "APPEND",
+          "content": " (see Appendix A)"
+        }
+      ]
+    },
+    {
+      "address": "body/paragraph[2]",
+      "each": false,
+      "operations": [
+        {
+          "type": "PREPEND",
+          "content": "UPDATED: "
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

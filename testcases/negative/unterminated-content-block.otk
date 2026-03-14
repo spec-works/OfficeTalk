@@ -1,0 +1,6 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[1]
+INSERT BEFORE <<<
+This content block never ends

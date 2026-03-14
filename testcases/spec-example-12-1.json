@@ -1,0 +1,32 @@
+{
+  "name": "spec-example-12-1",
+  "description": "Example 12.1 from the OfficeTalk specification",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[text*=\"teh company\"]",
+      "each": false,
+      "operations": [
+        { "type": "REPLACE", "search": "teh", "replacement": "the", "all": false }
+      ]
+    },
+    {
+      "address": "body/heading[level=1]",
+      "each": false,
+      "operations": [
+        { "type": "SET", "content": "Annual Report — FY2026" },
+        { "type": "FORMAT", "properties": { "font-size": "28pt", "color": "#1F3864" } }
+      ]
+    },
+    {
+      "address": "body/paragraph[text=\"DRAFT — DO NOT DISTRIBUTE\"]",
+      "each": false,
+      "operations": [
+        { "type": "DELETE" }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

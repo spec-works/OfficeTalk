@@ -1,0 +1,17 @@
+{
+  "name": "comments-and-whitespace",
+  "description": "Comments and whitespace handling",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        { "type": "SET", "content": "Updated text" }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

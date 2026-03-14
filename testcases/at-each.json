@@ -1,0 +1,17 @@
+{
+  "name": "at-each",
+  "description": "AT EACH modifier for bulk operations",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[text*=\"colour\"]",
+      "each": true,
+      "operations": [
+        { "type": "REPLACE", "search": "colour", "replacement": "color", "all": true }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

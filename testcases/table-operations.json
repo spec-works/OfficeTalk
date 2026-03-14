@@ -1,0 +1,18 @@
+{
+  "name": "table-operations",
+  "description": "Table structural operations",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/table[1]/row[3]",
+      "each": false,
+      "operations": [
+        { "type": "INSERT_ROW", "position": "AFTER" },
+        { "type": "SET_CELLS", "values": ["Product D", "450", "12%", "Active"] }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

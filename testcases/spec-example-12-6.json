@@ -1,0 +1,52 @@
+{
+  "name": "spec-example-12-6",
+  "description": "Example 12.6 from the OfficeTalk specification — comprehensive document rewrite",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[level=1]",
+      "each": false,
+      "operations": [
+        { "type": "SET", "content": "Project Phoenix" },
+        { "type": "FORMAT", "properties": { "font-name": "Aptos Display", "font-size": "32pt", "color": "#2B579A" } }
+      ]
+    },
+    {
+      "address": "body",
+      "each": false,
+      "operations": [
+        { "type": "REPLACE", "search": "legacy system", "replacement": "heritage platform", "all": true },
+        { "type": "REPLACE", "search": "Phase 1", "replacement": "Phase One", "all": true }
+      ]
+    },
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        { "type": "INSERT_BEFORE", "content": "Abstract\n\nThis document describes the technical architecture for Project Phoenix,\na next-generation platform for real-time data processing. It covers\nsystem design, API specifications, deployment topology, and operational\nrunbooks." }
+      ]
+    },
+    {
+      "address": "body/paragraph[text=\"Abstract\"]",
+      "each": false,
+      "operations": [
+        { "type": "STYLE", "styleName": "Heading 2" }
+      ]
+    },
+    {
+      "address": "body/table[caption=\"Milestones\"]/row[6]",
+      "each": false,
+      "operations": [
+        { "type": "INSERT_ROW", "position": "AFTER" },
+        { "type": "SET_CELLS", "values": ["M7", "Production Readiness Review", "2026-06-15", "Pending"] },
+        { "type": "FORMAT", "properties": { "fill-color": "#FFF2CC" } }
+      ]
+    }
+  ],
+  "propertySettings": [
+    { "name": "title", "value": "Project Phoenix — Technical Design Document" },
+    { "name": "author", "value": "Engineering Team" }
+  ],
+  "isValid": true
+}

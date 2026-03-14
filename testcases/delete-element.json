@@ -1,0 +1,19 @@
+{
+  "name": "delete-element",
+  "description": "DELETE operation on a paragraph",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[text=\"DRAFT — DO NOT DISTRIBUTE\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "DELETE"
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

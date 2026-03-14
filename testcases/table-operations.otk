@@ -1,0 +1,6 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/table[1]/row[3]
+INSERT ROW AFTER
+SET CELLS "Product D", "450", "12%", "Active"

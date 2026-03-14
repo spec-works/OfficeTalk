@@ -1,0 +1,22 @@
+{
+  "name": "replace-text",
+  "description": "REPLACE operation with WITH clause",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[text*=\"teh company\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "REPLACE",
+          "search": "teh",
+          "replacement": "the",
+          "all": false
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

@@ -1,0 +1,24 @@
+{
+  "name": "format-properties",
+  "description": "FORMAT with multiple properties",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        {
+          "type": "FORMAT",
+          "properties": {
+            "bold": true,
+            "font-size": "14pt",
+            "color": "#2B579A"
+          }
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

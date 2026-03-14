@@ -1,0 +1,13 @@
+{
+  "name": "document-properties",
+  "description": "PROPERTY lines setting document metadata",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [
+    { "name": "title", "value": "Quarterly Report Q1 2026" },
+    { "name": "author", "value": "Finance Team" },
+    { "name": "subject", "value": "Financial review" }
+  ],
+  "isValid": true
+}

@@ -1,0 +1,16 @@
+{
+  "name": "all-address-types",
+  "description": "Comprehensive address syntax coverage",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    { "address": "body/paragraph[3]", "each": false, "operations": [{ "type": "DELETE" }] },
+    { "address": "body/heading[level=2, text=\"Methods\"]", "each": false, "operations": [{ "type": "SET", "content": "Updated Methods" }] },
+    { "address": "body/table[1]/row[2]/cell[3]", "each": false, "operations": [{ "type": "SET", "content": "New value" }] },
+    { "address": "body/bookmark[\"references\"]", "each": false, "operations": [{ "type": "DELETE" }] },
+    { "address": "body/image[alt=\"Company Logo\"]", "each": false, "operations": [{ "type": "DELETE" }] },
+    { "address": "body/content-control[tag=\"abstract\"]", "each": false, "operations": [{ "type": "SET", "content": "Updated abstract" }] }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

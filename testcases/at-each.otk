@@ -1,0 +1,5 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT EACH body/paragraph[text*="colour"]
+REPLACE ALL "colour" WITH "color"

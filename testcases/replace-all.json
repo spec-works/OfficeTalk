@@ -1,0 +1,22 @@
+{
+  "name": "replace-all",
+  "description": "REPLACE ALL operation for bulk replacement",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body",
+      "each": false,
+      "operations": [
+        {
+          "type": "REPLACE",
+          "search": "colour",
+          "replacement": "color",
+          "all": true
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

@@ -1,0 +1,7 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+# This is a comment
+AT body/paragraph[1]
+# Another comment inside a block
+SET "Updated text"

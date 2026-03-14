@@ -1,0 +1,37 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+# Update document metadata
+PROPERTY title="Project Phoenix — Technical Design Document"
+PROPERTY author="Engineering Team"
+
+# Restyle the main heading
+AT body/heading[level=1]
+SET "Project Phoenix"
+FORMAT font-name="Aptos Display", font-size=32pt, color=#2B579A
+
+# Replace outdated terminology throughout the document body
+AT body
+REPLACE ALL "legacy system" WITH "heritage platform"
+REPLACE ALL "Phase 1" WITH "Phase One"
+
+# Insert an abstract before the first paragraph
+AT body/paragraph[1]
+INSERT BEFORE <<<
+Abstract
+
+This document describes the technical architecture for Project Phoenix,
+a next-generation platform for real-time data processing. It covers
+system design, API specifications, deployment topology, and operational
+runbooks.
+>>>
+
+# Format the abstract heading
+AT body/paragraph[text="Abstract"]
+STYLE "Heading 2"
+
+# Add a row to the milestones table
+AT body/table[caption="Milestones"]/row[6]
+INSERT ROW AFTER
+SET CELLS "M7", "Production Readiness Review", "2026-06-15", "Pending"
+FORMAT fill-color=#FFF2CC

@@ -1,0 +1,4 @@
+OFFICETALK/1.0
+
+AT body/paragraph[1]
+SET "Hello"

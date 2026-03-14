@@ -1,0 +1,35 @@
+{
+  "name": "text-predicates",
+  "description": "Various text matching predicates",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[text=\"Exact match\"]",
+      "each": false,
+      "operations": [{ "type": "DELETE" }]
+    },
+    {
+      "address": "body/paragraph[text*=\"contains this\"]",
+      "each": false,
+      "operations": [{ "type": "DELETE" }]
+    },
+    {
+      "address": "body/paragraph[text^=\"Starts with\"]",
+      "each": false,
+      "operations": [{ "type": "DELETE" }]
+    },
+    {
+      "address": "body/paragraph[text$=\"ends with this.\"]",
+      "each": false,
+      "operations": [{ "type": "DELETE" }]
+    },
+    {
+      "address": "body/paragraph[text~=\"^Chapter \\d+\"]",
+      "each": false,
+      "operations": [{ "type": "DELETE" }]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

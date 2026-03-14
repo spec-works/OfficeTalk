@@ -1,0 +1,9 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/heading[text="Conclusion"]
+INSERT BEFORE <<<
+This new section appears just before the Conclusion.
+
+It has multiple paragraphs.
+>>>

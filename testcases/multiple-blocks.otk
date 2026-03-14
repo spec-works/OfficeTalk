@@ -1,0 +1,15 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+# Fix a typo
+AT body/paragraph[text*="teh company"]
+REPLACE "teh" WITH "the"
+
+# Update the title
+AT body/heading[level=1]
+SET "Annual Report — FY2026"
+FORMAT font-size=28pt, color=#1F3864
+
+# Remove the draft watermark
+AT body/paragraph[text="DRAFT — DO NOT DISTRIBUTE"]
+DELETE
