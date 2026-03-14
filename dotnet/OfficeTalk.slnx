@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OfficeTalk/OfficeTalk.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OfficeTalk.Tests/OfficeTalk.Tests.csproj" />
+  </Folder>
+</Solution>
