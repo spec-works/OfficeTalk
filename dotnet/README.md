@@ -1,13 +1,11 @@
 # OfficeTalk .NET Library
 
-A .NET 9 library for parsing, validating, and executing [OfficeTalk](https://spec-works.github.io/registry/parts/officetalk/) documents — deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint).
+A .NET 9 library for parsing and validating [OfficeTalk](https://spec-works.github.io/registry/parts/officetalk/) documents — a grammar for deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint).
 
 ## Features
 
 - **Parse** OfficeTalk documents into a typed AST
-- **Validate** against syntactic rules and target documents
-- **Execute** operations on Word (.docx) documents via OpenXML SDK
-- **Address** elements using the OfficeTalk semantic path syntax
+- **Validate** against syntactic rules (grammar-level checks, conflict detection)
 
 ## Installation
 
@@ -49,28 +47,14 @@ Console.WriteLine($"Blocks: {document.OperationBlocks.Count}");
 ```csharp
 using OfficeTalk.Validation;
 
-// Syntactic validation (no target document needed)
 var syntacticValidator = new SyntacticValidator();
-var syntacticResult = syntacticValidator.Validate(document);
+var result = syntacticValidator.Validate(document);
 
-if (!syntacticResult.IsValid)
+if (!result.IsValid)
 {
-    foreach (var error in syntacticResult.Errors)
+    foreach (var error in result.Errors)
         Console.Error.WriteLine(error);
 }
-
-// Semantic validation (against a target document)
-var semanticValidator = new SemanticValidator();
-var semanticResult = semanticValidator.Validate(document, "target.docx");
-```
-
-### Execute Operations on a Word Document
-
-```csharp
-using OfficeTalk.Execution;
-
-var executor = new WordExecutor();
-executor.Execute(document, "target.docx", "output.docx");
 ```
 
 ## Architecture
@@ -89,45 +73,14 @@ OfficeTalk/
 │   ├── Predicate.cs           Predicate types
 │   ├── Operations.cs          All operation types
 │   └── DataTypes.cs           Color, Length, etc.
-├── Addressing/        Resolve addresses against documents
-│   ├── IAddressResolver.cs
-│   └── WordAddressResolver.cs
-├── Execution/         Execute operations on documents
-│   ├── IOfficeTalkExecutor.cs
-│   └── WordExecutor.cs
-└── Validation/        Syntactic and semantic validation
+└── Validation/        Syntactic validation
     ├── SyntacticValidator.cs
-    ├── SemanticValidator.cs
     └── ValidationResult.cs
 ```
-
-### Processing Model
-
-OfficeTalk uses a three-phase processing model:
-
-1. **Resolution** — All addresses are resolved against the original document (snapshot semantics)
-2. **Validation** — Semantic checks ensure operations are valid
-3. **Execution** — Operations are applied sequentially
-
-### Supported Operations
-
-| Operation | Word | Excel | PowerPoint |
-|-----------|------|-------|------------|
-| SET | ✅ | — | — |
-| REPLACE / REPLACE ALL | ✅ | — | — |
-| INSERT BEFORE/AFTER | ◻️ | — | — |
-| DELETE | ✅ | — | — |
-| APPEND / PREPEND | ✅ | — | — |
-| FORMAT | ◻️ | — | — |
-| STYLE | ✅ | — | — |
-| PROPERTY | ✅ | — | — |
-
-✅ = Implemented, ◻️ = Stub (throws NotImplementedException), — = Not yet started
 
 ## Requirements
 
 - .NET 9.0 or later
-- DocumentFormat.OpenXml 3.1.0
 
 ## Testing
 

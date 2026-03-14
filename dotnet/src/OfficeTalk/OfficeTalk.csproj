@@ -8,8 +8,8 @@
     <Version>0.1.0</Version>
     <Authors>SpecWorks</Authors>
     <Company>SpecWorks</Company>
-    <Description>A .NET library for parsing, validating, and executing OfficeTalk documents — deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint).</Description>
-    <PackageTags>officetalk;word;excel;powerpoint;docx;openxml;document;office;modification</PackageTags>
+    <Description>A .NET library for parsing and validating OfficeTalk documents — a grammar for deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint).</Description>
+    <PackageTags>officetalk;word;excel;powerpoint;document;office;parser;ast;validation</PackageTags>
     <PackageProjectUrl>https://github.com/spec-works/OfficeTalk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/spec-works/OfficeTalk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -20,10 +20,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />

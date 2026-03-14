@@ -12,7 +12,6 @@ See [specs.json](specs.json) for complete specification references.
 ## Implementations
 
 - **[.NET Library](dotnet/README.md)** - ![.NET Test](https://github.com/spec-works/OfficeTalk/workflows/.NET%20Test/badge.svg)
-- **[.NET CLI](dotnet/README.md#command-line-interface)** - ![.NET Test](https://github.com/spec-works/OfficeTalk/workflows/.NET%20Test/badge.svg)
 
 ## License
 
