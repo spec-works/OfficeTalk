@@ -23,4 +23,8 @@
     <ProjectReference Include="..\..\src\OfficeTalk\OfficeTalk.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\testcases\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="testcases" />
+  </ItemGroup>
+
 </Project>
