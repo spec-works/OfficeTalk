@@ -211,7 +211,7 @@ A path segment is a lowercase identifier naming a structural element:
 | `body` | Document body (Word) |
 | `paragraph` | A paragraph |
 | `heading` | A paragraph with a heading style |
-| `run` | A text run within a paragraph |
+| `run` | A text span within a paragraph (see §4.3.5) |
 | `table` | A table |
 | `row` | A table row |
 | `cell` | A table cell |
@@ -325,7 +325,35 @@ body/heading[level=1, text="Chapter 3"]/heading[level=2, text="Analysis"]/paragr
 This addresses the first paragraph within the "Analysis" subsection of
 "Chapter 3".
 
-#### 4.3.5. Excel Cell References
+#### 4.3.5. Run (Text Span) Resolution
+
+The `run` segment addresses a contiguous span of text within a paragraph,
+not an underlying XML run element (`<w:r>`). When a `run` segment includes a
+text predicate, the implementation MUST locate the matching text within the
+parent scope and isolate it as a targetable range.
+
+```
+body/paragraph[1]/run[text="OfficeTalk"]      # the text "OfficeTalk" in paragraph 1
+body/paragraph[3]/run[text*="important"]       # text containing "important"
+```
+
+If the matched text falls within a single structural run, that run (or a
+portion of it) is the target. If the matched text spans part of a larger
+run, the implementation MUST split the underlying run to isolate the matched
+span. This ensures that operations like FORMAT apply only to the targeted
+text, not the entire structural run.
+
+**Rationale:** LLMs generating OfficeTalk do not have visibility into how a
+document's text is divided into structural runs. A paragraph displayed as
+"AI agents use OfficeTalk to edit documents." may be stored as one run or
+many. The `run` segment provides a content-based way to target specific text
+regardless of the underlying structure.
+
+All text matching operators (`text=`, `text*=`, `text^=`, `text$=`,
+`text~=`) are supported on `run` segments with the same semantics as on
+other elements (see §4.3.3).
+
+#### 4.3.6. Excel Cell References
 
 Excel addresses support standard cell reference notation as shorthand:
 
@@ -353,6 +381,8 @@ body/image[alt="Company Logo"]
 body/section[2]
 body/bookmark["references"]
 body/content-control[tag="abstract"]
+body/paragraph[1]/run[text="OfficeTalk"]
+body/heading[text="Methods"]/paragraph[1]/run[text*="conclusion"]
 header[type=default]
 header[type=first]
 footer[type=default]
