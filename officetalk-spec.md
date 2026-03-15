@@ -299,7 +299,44 @@ be appended to disambiguate:
 paragraph[text*="revenue"][2]    # second paragraph containing "revenue"
 ```
 
-#### 4.3.4. Excel Cell References
+#### 4.3.4. Heading-Scoped Addressing
+
+When a `heading` segment appears in a non-terminal position (i.e., followed by
+further path segments), it defines a **section scope**. The section scope
+contains all sibling elements between the matched heading and the next heading
+at the same or higher level (lower or equal outline level number).
+
+```
+body/heading[text="Methods"]/paragraph[1]
+body/heading[level=2, text="Results"]/table[1]
+body/heading[level=1]/paragraph[text*="summary"]
+```
+
+The first example addresses the first non-heading paragraph following the
+"Methods" heading, up to (but not including) the next heading of equal or
+higher level. The second example addresses the first table within the
+"Results" section.
+
+If the heading is the last heading at its level in the document, the section
+scope extends to the end of the document body (or to the next heading at a
+higher level).
+
+Heading-scoped addressing is particularly useful for LLM-generated operations
+where the human description refers to content by its section context (e.g.,
+"change the paragraph under Operations") rather than by absolute position or
+text content.
+
+**Nesting:** Heading scopes may be nested to address content within
+subsections:
+
+```
+body/heading[level=1, text="Chapter 3"]/heading[level=2, text="Analysis"]/paragraph[1]
+```
+
+This addresses the first paragraph within the "Analysis" subsection of
+"Chapter 3".
+
+#### 4.3.5. Excel Cell References
 
 Excel addresses support standard cell reference notation as shorthand:
 
@@ -316,6 +353,9 @@ body/paragraph[1]
 body/paragraph[text*="conclusion"]
 body/heading[level=1]
 body/heading[level=2, text="Methods"]
+body/heading[text="Introduction"]/paragraph[1]
+body/heading[level=2, text="Results"]/table[1]
+body/heading[level=1, text="Chapter 3"]/heading[level=2, text="Analysis"]/paragraph[1]
 body/table[1]/row[3]/cell[2]
 body/table[caption="Results"]/row[1]
 body/list[1]/item[3]
@@ -364,10 +404,16 @@ Addresses are resolved against the target document as follows:
    type within the current scope.
 3. Predicates filter the matching set. Positional predicates select by index;
    key-value predicates filter by attribute; text predicates filter by content.
-4. If the result set is empty, the address fails to resolve and the
+4. **Heading scope:** When a `heading` segment is followed by additional path
+   segments, the implementation MUST compute the section scope for each matched
+   heading. The scope includes all sibling elements after the heading up to
+   (but not including) the next heading at the same or higher level. Subsequent
+   segments are resolved within this scope rather than within the heading
+   element itself.
+5. If the result set is empty, the address fails to resolve and the
    implementation MUST report an error.
-5. If `EACH` is specified, the full result set is returned as the target.
-6. If `EACH` is not specified and the result set contains more than one
+6. If `EACH` is specified, the full result set is returned as the target.
+7. If `EACH` is not specified and the result set contains more than one
    element, the implementation MUST report an ambiguity error.
 
 ---
@@ -953,7 +999,26 @@ recommends the following actions for the upcoming fiscal year.
 FORMAT style="Heading 1"
 ```
 
-### 12.3. Word: Table Manipulation
+### 12.3. Word: Heading-Scoped Editing
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Change the first paragraph under the Operations heading
+AT body/heading[text="Operations"]/paragraph[1]
+SET "The operations squad is responsible for all production deployments."
+
+# Update a table within a specific section
+AT body/heading[level=2, text="Financial Results"]/table[1]/row[2]/cell[3]
+SET "1,250,000"
+
+# Replace text only within a subsection
+AT body/heading[level=1, text="Chapter 3"]/heading[level=2, text="Analysis"]/paragraph[text*="outdated"]
+REPLACE "outdated methodology" WITH "revised methodology"
+```
+
+### 12.4. Word: Table Manipulation
 
 ```
 OFFICETALK/1.0
@@ -973,7 +1038,7 @@ AT body/table[caption="Quarterly Results"]/cell[1]
 FORMAT width=2in
 ```
 
-### 12.4. Excel: Update a Spreadsheet
+### 12.5. Excel: Update a Spreadsheet
 
 ```
 OFFICETALK/1.0
@@ -999,7 +1064,7 @@ AT sheet["Sheet1"]
 RENAME SHEET "Dashboard"
 ```
 
-### 12.5. PowerPoint: Update a Presentation
+### 12.6. PowerPoint: Update a Presentation
 
 ```
 OFFICETALK/1.0
@@ -1034,7 +1099,7 @@ AT slide[text*="Appendix — Old Data"]
 DELETE SLIDE
 ```
 
-### 12.6. Word: Comprehensive Document Rewrite
+### 12.7. Word: Comprehensive Document Rewrite
 
 ```
 OFFICETALK/1.0
@@ -1238,6 +1303,7 @@ An implementation library using the Open XML SDK (C#/.NET) should:
 |--------------------|-----------------|
 | `body/paragraph[n]` | `Body.Elements<Paragraph>()[n-1]` |
 | `body/heading[level=n]` | `Paragraph` where `ParagraphProperties.ParagraphStyleId` maps to heading level `n` |
+| `body/heading[text="X"]/paragraph[1]` | First non-heading `Paragraph` after the matched heading, up to the next heading at the same or higher level |
 | `body/table[n]/row[m]/cell[k]` | `Table[n-1].Elements<TableRow>()[m-1].Elements<TableCell>()[k-1]` |
 | `body/bookmark["name"]` | `BookmarkStart` where `Name == "name"` |
 | `header[type=default]` | `HeaderPart` referenced by `SectionProperties.HeaderReference` with `Type == Default` |
