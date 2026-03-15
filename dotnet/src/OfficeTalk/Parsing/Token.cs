@@ -58,6 +58,7 @@ public enum TokenType
     ADD,
     RENAME,
     DUPLICATE,
+    COMMENT_KW,
 
     // Document type values
     Word,

@@ -112,6 +112,12 @@ public class AddSheetOperation : Operation
     public string Name { get; set; } = string.Empty;
 }
 
+/// <summary>COMMENT "text" — add a comment anchored to the addressed element.</summary>
+public class CommentOperation : Operation
+{
+    public ContentValue Content { get; set; } = new();
+}
+
 /// <summary>
 /// Represents content that can be either an inline string or a content block.
 /// </summary>

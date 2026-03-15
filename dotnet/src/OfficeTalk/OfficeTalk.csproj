@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>SpecWorks.OfficeTalk</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>SpecWorks</Authors>
     <Company>SpecWorks</Company>
     <Description>A .NET library for parsing and validating OfficeTalk documents — a grammar for deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint).</Description>

@@ -42,6 +42,7 @@ public class OfficeTalkLexer
         ["ADD"] = TokenType.ADD,
         ["RENAME"] = TokenType.RENAME,
         ["DUPLICATE"] = TokenType.DUPLICATE,
+        ["COMMENT"] = TokenType.COMMENT_KW,
     };
 
     private static readonly Dictionary<string, TokenType> DocTypeValues = new(StringComparer.OrdinalIgnoreCase)

@@ -139,6 +139,16 @@ public class SyntacticValidator
                     "ADD SHEET is only valid for Excel documents.",
                     operation.Line));
                 break;
+
+            case CommentOperation comment:
+                if (string.IsNullOrEmpty(comment.Content.Text) && !comment.Content.IsContentBlock)
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "COMMENT operation has empty text.",
+                        operation.Line));
+                }
+                break;
         }
     }
 

@@ -412,6 +412,7 @@ public class OfficeTalkParser
             TokenType.DUPLICATE => ParseDuplicate(),
             TokenType.RENAME => ParseRename(),
             TokenType.ADD => ParseAdd(),
+            TokenType.COMMENT_KW => ParseComment(),
             _ => HandleUnexpectedOperation(token)
         };
     }
@@ -800,6 +801,21 @@ public class OfficeTalkParser
         Advance();
 
         return new AddSheetOperation { Name = name, Line = addToken.Line };
+    }
+
+    private Operation? ParseComment()
+    {
+        var token = Current();
+        Advance(); // skip COMMENT
+
+        var content = ParseContentValue();
+        if (content == null)
+        {
+            AddError("Expected comment text after COMMENT", token);
+            return null;
+        }
+
+        return new CommentOperation { Content = content, Line = token.Line };
     }
 
     private ContentValue? ParseContentValue()
