@@ -1,6 +1,12 @@
 {
   "linkset": [
     {
+      "href": "officetalk-spec.md",
+      "type": "text/markdown",
+      "rel": "describedby",
+      "title": "OfficeTalk Specification"
+    },
+    {
       "href": "https://www.ecma-international.org/publications-and-standards/standards/ecma-376/",
       "type": "text/html",
       "rel": "describedby",
