@@ -655,6 +655,43 @@ PROPERTY subject="Financial review"
 PROPERTY lines do not require an `AT` address. They apply to the document
 as a whole.
 
+### 5.5. Annotation Operations
+
+#### 5.5.1. COMMENT
+
+Adds a comment anchored to the addressed element.
+
+```
+AT heading[text="Key Risks"]/item[2]
+COMMENT "Should we update this figure for Q2?"
+
+AT body/paragraph[text*="revenue"]/run[text*="29%"]
+COMMENT "Finance team to verify this number."
+```
+
+The comment is attached to the full range of the addressed element. When
+the address resolves to a paragraph, the comment spans the entire paragraph.
+When the address resolves to a run, the comment spans only that run's text.
+
+COMMENT with content blocks for longer review notes:
+
+```
+AT heading[text="Recommendations"]/paragraph[1]
+COMMENT <<<
+This recommendation conflicts with the budget constraints
+outlined in Section 3. Please reconcile before publishing.
+>>>
+```
+
+The `author` of the comment is implementation-defined. Implementations
+SHOULD allow the author to be configured externally (e.g., via a command-line
+option or environment variable). If no author is configured, implementations
+MAY use a default such as "OfficeTalk".
+
+COMMENT is additive: applying a COMMENT operation to an element that already
+has comments MUST NOT remove existing comments. Multiple COMMENT operations
+on the same element create multiple distinct comments.
+
 ---
 
 ## 6. Data Types
@@ -1160,6 +1197,30 @@ SET CELLS "M7", "Production Readiness Review", "2026-06-15", "Pending"
 FORMAT fill-color=#FFF2CC
 ```
 
+### 12.8. Word: Document Review with Comments
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Flag an outdated statistic for the author to verify
+AT heading[text="Financial Summary"]/paragraph[1]/run[text*="29%"]
+COMMENT "Please verify this figure — it may have been updated to 31% in the latest filing."
+
+# Request clarification on a vague recommendation
+AT heading[text="Recommendations"]/item[2]
+COMMENT <<<
+This recommendation to "expand by 20%" needs more context:
+- What is the baseline headcount?
+- What is the budget impact?
+- Has HR approved the hiring plan?
+>>>
+
+# Note a compliance concern
+AT heading[text="Key Risks"]/paragraph[1]
+COMMENT "Legal team should review this section before publication."
+```
+
 ---
 
 ## 13. Formal Grammar
@@ -1185,7 +1246,7 @@ sheet-block      = ("ADD SHEET" / "DELETE SHEET" / "RENAME SHEET") SP quoted-str
 
 operation-line   = ( set-op / replace-op / insert-op / delete-op
                    / append-op / prepend-op / format-op / style-op
-                   / structural-op ) LF
+                   / structural-op / comment-op ) LF
 
 ; --- Content Operations ---
 set-op           = "SET" SP ( quoted-string / content-block / cells-clause )
@@ -1213,6 +1274,9 @@ merge-op         = "MERGE CELLS TO" SP address
 slide-op         = ( "INSERT SLIDE" SP ( "BEFORE" / "AFTER" ) )
                  / "DUPLICATE SLIDE"
 slide-props      = *( set-op LF )
+
+; --- Annotation Operations ---
+comment-op       = "COMMENT" SP ( quoted-string / content-block )
 
 ; --- Address ---
 address          = segment *( "/" segment )
