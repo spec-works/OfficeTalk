@@ -78,18 +78,7 @@ The format is governed by the following design principles:
    operation blocks. Blocks can be reordered, filtered, or composed from
    multiple sources.
 
-### 1.3. Relationship to ODSL
-
-OfficeTalk builds on lessons learned from Office DSL (ODSL), the structured
-command language used in Microsoft 365 Copilot workflows:
-
-- **From ODSL**: Typed arguments, named operations, semantic addressing,
-  structured validation with error and warning categories.
-- **Beyond ODSL**: OfficeTalk defines a complete media type with a formal
-  grammar, a content-addressing scheme for Office documents, a processing
-  model with snapshot semantics, and deterministic execution guarantees.
-
-### 1.4. Terminology
+### 1.3. Terminology
 
 | Term | Definition |
 |------|-----------|
@@ -101,7 +90,7 @@ command language used in Microsoft 365 Copilot workflows:
 | **Content block** | A multi-line text literal delimited by `<<<` and `>>>` |
 | **Snapshot semantics** | All addresses are resolved against the original target document before any operations are applied |
 
-### 1.5. Conventions
+### 1.4. Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
