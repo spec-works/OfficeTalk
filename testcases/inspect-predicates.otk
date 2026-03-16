@@ -1,0 +1,11 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading[level="1"]
+  INCLUDE content
+
+INSPECT body/paragraph[text*="Introduction"]
+  INCLUDE content
+
+INSPECT body/table[1]/row[2]
+  DEPTH 1

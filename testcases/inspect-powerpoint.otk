@@ -1,0 +1,6 @@
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+INSPECT slide[1]
+  DEPTH 1
+  INCLUDE content

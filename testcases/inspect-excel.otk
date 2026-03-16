@@ -1,0 +1,8 @@
+OFFICETALK/1.0
+DOCTYPE excel
+
+INSPECT sheet["Sales"]
+  DEPTH 1
+
+INSPECT sheet[1]/A1
+  INCLUDE content

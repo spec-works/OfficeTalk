@@ -103,6 +103,59 @@ public class PositiveTestCaseTests
             document.PropertySettings[i].Value.Should().Be(
                 expectedProp.GetProperty("value").GetString(), propContext);
         }
+
+        // Verify inspect blocks (if present in the expected JSON)
+        if (expected.TryGetProperty("inspectBlocks", out var expectedInspects))
+        {
+            document.InspectBlocks.Should().HaveCount(expectedInspects.GetArrayLength(),
+                $"inspect block count should match in test case '{testName}'");
+
+            for (int i = 0; i < expectedInspects.GetArrayLength(); i++)
+            {
+                var expectedBlock = expectedInspects[i];
+                var actualBlock = document.InspectBlocks[i];
+                var blockContext = $"inspect block {i} in test case '{testName}'";
+
+                // Verify address
+                var expectedAddress = NormalizeExpectedAddress(
+                    expectedBlock.GetProperty("address").GetString()!);
+                actualBlock.Address.ToString().Should().Be(expectedAddress,
+                    $"address should match for {blockContext}");
+
+                // Verify depth
+                actualBlock.Depth.Should().Be(
+                    expectedBlock.GetProperty("depth").GetInt32(),
+                    $"depth should match for {blockContext}");
+
+                // Verify include layers
+                var expectedInclude = expectedBlock.GetProperty("include");
+                var expectedLayers = new List<string>();
+                foreach (var layer in expectedInclude.EnumerateArray())
+                {
+                    expectedLayers.Add(layer.GetString()!);
+                }
+
+                actualBlock.Include.Should().HaveCount(expectedLayers.Count,
+                    $"include layer count should match for {blockContext}");
+                for (int j = 0; j < expectedLayers.Count; j++)
+                {
+                    actualBlock.Include[j].ToString().ToLowerInvariant().Should().Be(
+                        expectedLayers[j],
+                        $"include layer {j} should match for {blockContext}");
+                }
+
+                // Verify context
+                actualBlock.Context.Should().Be(
+                    expectedBlock.GetProperty("context").GetInt32(),
+                    $"context should match for {blockContext}");
+            }
+        }
+        else
+        {
+            // If no inspectBlocks in JSON, document should have none
+            document.InspectBlocks.Should().BeEmpty(
+                $"no inspect blocks expected in test case '{testName}'");
+        }
     }
 
     private static void VerifyOperation(Operation actual, JsonElement expected,

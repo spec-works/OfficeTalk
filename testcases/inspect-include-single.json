@@ -1,0 +1,17 @@
+{
+  "name": "inspect-include-single",
+  "description": "INCLUDE with a single layer (properties only)",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "depth": 0,
+      "include": ["properties"],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}

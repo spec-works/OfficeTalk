@@ -1,0 +1,17 @@
+{
+  "name": "inspect-powerpoint",
+  "description": "PowerPoint doctype with slide addressing",
+  "version": "1.0",
+  "docType": "powerpoint",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "slide[1]",
+      "depth": 1,
+      "include": ["content"],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}

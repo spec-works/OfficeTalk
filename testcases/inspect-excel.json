@@ -1,0 +1,23 @@
+{
+  "name": "inspect-excel",
+  "description": "Excel doctype with sheet addressing",
+  "version": "1.0",
+  "docType": "excel",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "sheet[\"Sales\"]",
+      "depth": 1,
+      "include": [],
+      "context": 0
+    },
+    {
+      "address": "sheet[1]/A1",
+      "depth": 0,
+      "include": ["content"],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}

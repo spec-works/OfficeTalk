@@ -1,0 +1,17 @@
+{
+  "name": "inspect-simple",
+  "description": "Simple single INSPECT with no modifiers",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/heading",
+      "depth": 0,
+      "include": [],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}

@@ -530,4 +530,173 @@ INSPECT slide[3]
         doc.InspectBlocks[0].Depth.Should().Be(10);
         doc.Errors.Should().BeEmpty();
     }
+
+    [Fact]
+    public void Parse_InspectLargeContext_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/paragraph[1]\n  CONTEXT 100\n");
+
+        doc.InspectBlocks[0].Context.Should().Be(100);
+        doc.Errors.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Parse_InspectStartsWithOperator_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/heading[text^=\"Chapter\"]\n");
+
+        var pred = doc.InspectBlocks[0].Address.Segments[1].Predicates[0]
+            .Should().BeOfType<KeyValuePredicate>().Subject;
+        pred.Operator.Should().Be(PredicateOperator.CaretEquals);
+        pred.Value.Should().Be("Chapter");
+    }
+
+    [Fact]
+    public void Parse_InspectEndsWithOperator_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/heading[text$=\"Summary\"]\n");
+
+        var pred = doc.InspectBlocks[0].Address.Segments[1].Predicates[0]
+            .Should().BeOfType<KeyValuePredicate>().Subject;
+        pred.Operator.Should().Be(PredicateOperator.DollarEquals);
+        pred.Value.Should().Be("Summary");
+    }
+
+    [Fact]
+    public void Parse_InspectMultiplePredicates_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/heading[level=\"1\", text^=\"Ch\"]\n");
+
+        var preds = doc.InspectBlocks[0].Address.Segments[1].Predicates;
+        preds.Should().HaveCount(2);
+        preds[0].Should().BeOfType<KeyValuePredicate>();
+        preds[1].Should().BeOfType<KeyValuePredicate>();
+    }
+
+    [Fact]
+    public void Parse_InspectDeepNestedAddress_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/table[1]/row[2]/cell[3]\n");
+
+        doc.Errors.Should().BeEmpty();
+        doc.InspectBlocks[0].Address.Segments.Should().HaveCount(4);
+        doc.InspectBlocks[0].Address.Segments[3].Identifier.Should().Be("cell");
+    }
+
+    [Fact]
+    public void Parse_InspectModifiersReversed_AllSet()
+    {
+        var doc = Parse(@"OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+  CONTEXT 2
+  INCLUDE properties
+  DEPTH 3
+");
+        doc.Errors.Should().BeEmpty();
+        doc.InspectBlocks[0].Context.Should().Be(2);
+        doc.InspectBlocks[0].Include.Should().Contain(IncludeLayer.Properties);
+        doc.InspectBlocks[0].Depth.Should().Be(3);
+    }
+
+    [Fact]
+    public void Parse_InspectOnlyIncludeContentComma_SingleLayer()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/paragraph\n  INCLUDE content\n");
+
+        doc.InspectBlocks[0].Include.Should().ContainSingle()
+            .Which.Should().Be(IncludeLayer.Content);
+    }
+
+    [Fact]
+    public void Parse_InspectOnlyIncludeProperties_SingleLayer()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/paragraph\n  INCLUDE properties\n");
+
+        doc.InspectBlocks[0].Include.Should().ContainSingle()
+            .Which.Should().Be(IncludeLayer.Properties);
+    }
+
+    [Fact]
+    public void Parse_InspectNoModifiers_DefaultValues()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/heading\n");
+
+        doc.InspectBlocks[0].Depth.Should().Be(0);
+        doc.InspectBlocks[0].Include.Should().BeEmpty();
+        doc.InspectBlocks[0].Context.Should().Be(0);
+    }
+
+    [Fact]
+    public void Parse_InspectFollowedByBlankLines_ParsedCorrectly()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nINSPECT body/heading\n  INCLUDE content\n\n\n");
+
+        doc.Errors.Should().BeEmpty();
+        doc.InspectBlocks.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void Parse_ManyInspectBlocks_AllParsed()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("OFFICETALK/1.0");
+        sb.AppendLine("DOCTYPE word");
+        sb.AppendLine();
+        for (int i = 1; i <= 10; i++)
+        {
+            sb.AppendLine($"INSPECT body/paragraph[{i}]");
+            sb.AppendLine("  INCLUDE content");
+            sb.AppendLine();
+        }
+        var doc = Parse(sb.ToString());
+
+        doc.Errors.Should().BeEmpty();
+        doc.InspectBlocks.Should().HaveCount(10);
+        for (int i = 0; i < 10; i++)
+        {
+            var pred = doc.InspectBlocks[i].Address.Segments[1].Predicates[0]
+                .Should().BeOfType<PositionalPredicate>().Subject;
+            pred.Position.Should().Be(i + 1);
+        }
+    }
+
+    // ─── Validation edge cases ──────────────────────────────────
+
+    [Fact]
+    public void Validate_InspectWithProperty_ProducesError()
+    {
+        var doc = Parse(@"OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+
+PROPERTY title = ""My Doc""
+");
+        var validator = new SyntacticValidator();
+        var result = validator.Validate(doc);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e =>
+            e.Category == ValidationCategory.MixedOperations);
+    }
+
+    [Fact]
+    public void Validate_MultipleInspectBlocks_IsValid()
+    {
+        var doc = Parse(@"OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+  INCLUDE content
+
+INSPECT body/table
+  DEPTH 2
+");
+        var validator = new SyntacticValidator();
+        var result = validator.Validate(doc);
+
+        result.IsValid.Should().BeTrue();
+    }
 }

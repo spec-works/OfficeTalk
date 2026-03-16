@@ -1,0 +1,17 @@
+{
+  "name": "inspect-depth-only",
+  "description": "Only DEPTH modifier, no INCLUDE or CONTEXT",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/table[1]",
+      "depth": 3,
+      "include": [],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}
