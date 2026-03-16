@@ -1,0 +1,25 @@
+{
+  "name": "set-runs",
+  "description": "SET RUNS with formatted text runs",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[3]",
+      "each": false,
+      "operations": [
+        {
+          "type": "SET_RUNS",
+          "runs": [
+            { "content": "This is " },
+            { "content": "bold text", "properties": { "bold": true } },
+            { "content": " and " },
+            { "content": "italic text", "properties": { "italic": true } },
+            { "content": " in one paragraph." }
+          ]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

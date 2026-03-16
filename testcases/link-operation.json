@@ -1,0 +1,19 @@
+{
+  "name": "link-operation",
+  "description": "LINK operation creates hyperlink",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]/run[text=\"click here\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "LINK",
+          "url": "https://example.com/report"
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

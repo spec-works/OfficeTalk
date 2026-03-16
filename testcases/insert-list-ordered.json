@@ -1,0 +1,25 @@
+{
+  "name": "insert-list-ordered",
+  "description": "INSERT LIST with ordered type",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[5]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_LIST",
+          "position": "AFTER",
+          "listType": "ordered",
+          "items": [
+            { "content": "First, gather requirements" },
+            { "content": "Second, create the design" },
+            { "content": "Third, implement and test" }
+          ]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

@@ -1,0 +1,25 @@
+{
+  "name": "insert-table",
+  "description": "INSERT TABLE with rows and columns",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[text=\"Results\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_TABLE",
+          "position": "AFTER",
+          "rows": 3,
+          "columns": 4
+        },
+        {
+          "type": "SET_CELLS",
+          "values": ["Product", "Q1", "Q2", "Q3"]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

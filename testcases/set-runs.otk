@@ -1,0 +1,10 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[3]
+SET RUNS
+  RUN "This is "
+  RUN "bold text" bold=true
+  RUN " and "
+  RUN "italic text" italic=true
+  RUN " in one paragraph."

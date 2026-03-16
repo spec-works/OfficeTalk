@@ -118,6 +118,57 @@ public class CommentOperation : Operation
     public ContentValue Content { get; set; } = new();
 }
 
+/// <summary>INSERT IMAGE BEFORE/AFTER "source" — insert an image.</summary>
+public class InsertImageOperation : Operation
+{
+    public InsertPosition Position { get; set; }
+    public string Source { get; set; } = string.Empty;
+    public Dictionary<string, object> Properties { get; set; } = new();
+}
+
+/// <summary>INSERT TABLE BEFORE/AFTER rows=N, columns=M — create a new table.</summary>
+public class InsertTableOperation : Operation
+{
+    public InsertPosition Position { get; set; }
+    public int Rows { get; set; }
+    public int Columns { get; set; }
+    public Dictionary<string, object> Properties { get; set; } = new();
+}
+
+/// <summary>LINK "url" — create a hyperlink on the addressed element.</summary>
+public class LinkOperation : Operation
+{
+    public string Url { get; set; } = string.Empty;
+}
+
+/// <summary>INSERT LIST BEFORE/AFTER [ordered|unordered] — create a list.</summary>
+public class InsertListOperation : Operation
+{
+    public InsertPosition Position { get; set; }
+    public ListType ListType { get; set; } = ListType.Unordered;
+    public List<ListItem> Items { get; set; } = new();
+}
+
+/// <summary>A single item in an INSERT LIST operation.</summary>
+public class ListItem
+{
+    public ContentValue Content { get; set; } = new();
+    public bool IsNested { get; set; }
+}
+
+/// <summary>SET RUNS — replace element content with individually formatted runs.</summary>
+public class SetRunsOperation : Operation
+{
+    public List<RunDefinition> Runs { get; set; } = new();
+}
+
+/// <summary>A single run in a SET RUNS operation.</summary>
+public class RunDefinition
+{
+    public ContentValue Content { get; set; } = new();
+    public Dictionary<string, object> Properties { get; set; } = new();
+}
+
 /// <summary>
 /// Represents content that can be either an inline string or a content block.
 /// </summary>
@@ -150,4 +201,11 @@ public enum InsertPosition
 {
     Before,
     After
+}
+
+/// <summary>Type of list for INSERT LIST operations.</summary>
+public enum ListType
+{
+    Ordered,
+    Unordered
 }

@@ -1,0 +1,7 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/heading[text="Results"]
+INSERT IMAGE AFTER "charts/revenue-q1.png"
+  alt="Revenue chart"
+  width=6in

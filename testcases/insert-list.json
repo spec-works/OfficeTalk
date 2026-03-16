@@ -1,0 +1,25 @@
+{
+  "name": "insert-list",
+  "description": "INSERT LIST with items",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[text=\"Action Items\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_LIST",
+          "position": "AFTER",
+          "listType": "unordered",
+          "items": [
+            { "content": "Review the Q1 financials" },
+            { "content": "Schedule follow-up meeting" },
+            { "content": "Update the project timeline" }
+          ]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

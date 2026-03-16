@@ -1,0 +1,27 @@
+{
+  "name": "insert-list-nested",
+  "description": "INSERT LIST with nested items",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[text=\"Overview\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_LIST",
+          "position": "AFTER",
+          "listType": "unordered",
+          "items": [
+            { "content": "Backend services" },
+            { "content": "Authentication", "nested": true },
+            { "content": "Database", "nested": true },
+            { "content": "Frontend components" },
+            { "content": "Dashboard", "nested": true }
+          ]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

@@ -60,6 +60,16 @@ public enum TokenType
     DUPLICATE,
     COMMENT_KW,
 
+    // New operation keywords
+    LINK,
+    IMAGE,
+    TABLE,
+    LIST,
+    ITEM,
+    RUNS,
+    RUN,
+    NESTED,
+
     // Inspect keywords
     INSPECT,
     DEPTH,

@@ -246,6 +246,69 @@ public class PositiveTestCaseTests
                 }
                 break;
 
+            case "LINK":
+                actual.Should().BeOfType<LinkOperation>(context);
+                ((LinkOperation)actual).Url.Should().Be(
+                    expected.GetProperty("url").GetString(), context);
+                break;
+
+            case "INSERT_IMAGE":
+                actual.Should().BeOfType<InsertImageOperation>(context);
+                var imgOp = (InsertImageOperation)actual;
+                imgOp.Position.ToString().ToUpperInvariant().Should().Be(
+                    expected.GetProperty("position").GetString(), context);
+                imgOp.Source.Should().Be(expected.GetProperty("source").GetString(), context);
+                if (expected.TryGetProperty("properties", out var imgProps))
+                    VerifyFormatProperties2(imgOp.Properties, imgProps, context);
+                break;
+
+            case "INSERT_TABLE":
+                actual.Should().BeOfType<InsertTableOperation>(context);
+                var tableOp = (InsertTableOperation)actual;
+                tableOp.Position.ToString().ToUpperInvariant().Should().Be(
+                    expected.GetProperty("position").GetString(), context);
+                tableOp.Rows.Should().Be(expected.GetProperty("rows").GetInt32(), context);
+                tableOp.Columns.Should().Be(expected.GetProperty("columns").GetInt32(), context);
+                break;
+
+            case "INSERT_LIST":
+                actual.Should().BeOfType<InsertListOperation>(context);
+                var listOp = (InsertListOperation)actual;
+                listOp.Position.ToString().ToUpperInvariant().Should().Be(
+                    expected.GetProperty("position").GetString(), context);
+                listOp.ListType.ToString().ToUpperInvariant().Should().Be(
+                    expected.GetProperty("listType").GetString()!.ToUpperInvariant(), context);
+                var expectedItems = expected.GetProperty("items");
+                listOp.Items.Should().HaveCount(expectedItems.GetArrayLength(), context);
+                for (int k = 0; k < expectedItems.GetArrayLength(); k++)
+                {
+                    var item = expectedItems[k];
+                    NormalizeNewlines(listOp.Items[k].Content.Text).Should().Be(
+                        NormalizeNewlines(item.GetProperty("content").GetString()!),
+                        $"item {k} in {context}");
+                    listOp.Items[k].IsNested.Should().Be(
+                        item.TryGetProperty("nested", out var nested) && nested.GetBoolean(),
+                        $"item {k} nested in {context}");
+                }
+                break;
+
+            case "SET_RUNS":
+                actual.Should().BeOfType<SetRunsOperation>(context);
+                var runsOp = (SetRunsOperation)actual;
+                var expectedRuns = expected.GetProperty("runs");
+                runsOp.Runs.Should().HaveCount(expectedRuns.GetArrayLength(), context);
+                for (int k = 0; k < expectedRuns.GetArrayLength(); k++)
+                {
+                    var run = expectedRuns[k];
+                    NormalizeNewlines(runsOp.Runs[k].Content.Text).Should().Be(
+                        NormalizeNewlines(run.GetProperty("content").GetString()!),
+                        $"run {k} in {context}");
+                    if (run.TryGetProperty("properties", out var runProps))
+                        VerifyFormatProperties2(runsOp.Runs[k].Properties, runProps,
+                            $"run {k} in {context}");
+                }
+                break;
+
             default:
                 Assert.Fail($"Unknown operation type '{expectedType}' in {context}");
                 break;
@@ -255,11 +318,17 @@ public class PositiveTestCaseTests
     private static void VerifyFormatProperties(FormatOperation formatOp,
         JsonElement expectedProps, string context)
     {
+        VerifyFormatProperties2(formatOp.Properties, expectedProps, context);
+    }
+
+    private static void VerifyFormatProperties2(Dictionary<string, object> properties,
+        JsonElement expectedProps, string context)
+    {
         foreach (var prop in expectedProps.EnumerateObject())
         {
-            formatOp.Properties.Should().ContainKey(prop.Name,
+            properties.Should().ContainKey(prop.Name,
                 $"property '{prop.Name}' should exist in {context}");
-            var actualValue = formatOp.Properties[prop.Name];
+            var actualValue = properties[prop.Name];
 
             switch (prop.Value.ValueKind)
             {

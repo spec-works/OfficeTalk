@@ -1,0 +1,6 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/heading[text="Results"]
+INSERT TABLE AFTER rows=3, columns=4
+SET CELLS "Product", "Q1", "Q2", "Q3"

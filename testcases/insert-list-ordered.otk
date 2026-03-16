@@ -1,0 +1,8 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[5]
+INSERT LIST AFTER ordered
+  ITEM "First, gather requirements"
+  ITEM "Second, create the design"
+  ITEM "Third, implement and test"
