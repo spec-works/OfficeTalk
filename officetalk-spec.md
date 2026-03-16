@@ -1220,7 +1220,7 @@ File extension:          .otk
 
 ```
 Type name:               application
-Subtype name:            officetalk-response+jsonl
+Subtype name:            officetalk-response
 Required parameters:     none
 Optional parameters:     none
 Encoding considerations: UTF-8
@@ -1888,7 +1888,7 @@ Error example:
 The JSONL response format is identified by the media type:
 
 ```
-application/officetalk-response+jsonl
+application/officetalk-response
 ```
 
 Implementations that accept OfficeTalk documents and produce responses
