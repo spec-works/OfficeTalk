@@ -1,0 +1,24 @@
+{
+  "name": "insert-shape",
+  "description": "INSERT SHAPE with shape type, position, and size",
+  "version": "1.0",
+  "docType": "powerpoint",
+  "operationBlocks": [
+    {
+      "address": "slide[2]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_SHAPE",
+          "shapeType": "rectangle",
+          "left": "100pt",
+          "top": "200pt",
+          "width": "300pt",
+          "height": "150pt"
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

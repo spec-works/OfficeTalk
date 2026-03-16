@@ -314,4 +314,84 @@ SET ""Updated text""
         var bare = (BareStringPredicate)segment.Predicates[0];
         bare.Value.Should().Be("Revenue");
     }
+
+    [Fact]
+    public void Parse_InsertTextbox_AllProperties()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE powerpoint\n\nAT slide[4]\n" +
+            "INSERT TEXTBOX left=210pt top=420pt width=300pt height=50pt text=\"hello\" align=center\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTextboxOperation>().Subject;
+        op.Text.Should().Be("hello");
+        op.Left.Should().Be("210pt");
+        op.Top.Should().Be("420pt");
+        op.Width.Should().Be("300pt");
+        op.Height.Should().Be("50pt");
+        op.Align.Should().Be("center");
+    }
+
+    [Fact]
+    public void Parse_InsertTextbox_RequiredPropertiesOnly()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE powerpoint\n\nAT slide[1]\n" +
+            "INSERT TEXTBOX width=200pt height=100pt text=\"Call out box\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTextboxOperation>().Subject;
+        op.Text.Should().Be("Call out box");
+        op.Width.Should().Be("200pt");
+        op.Height.Should().Be("100pt");
+        op.Left.Should().BeNull();
+        op.Top.Should().BeNull();
+        op.Align.Should().BeNull();
+    }
+
+    [Fact]
+    public void Parse_InsertShape_WithShapeType()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE powerpoint\n\nAT slide[2]\n" +
+            "INSERT SHAPE rectangle left=100pt top=200pt width=300pt height=150pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertShapeOperation>().Subject;
+        op.ShapeType.Should().Be("rectangle");
+        op.Left.Should().Be("100pt");
+        op.Top.Should().Be("200pt");
+        op.Width.Should().Be("300pt");
+        op.Height.Should().Be("150pt");
+    }
+
+    [Fact]
+    public void Parse_InsertShape_OvalType()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE powerpoint\n\nAT slide[1]\n" +
+            "INSERT SHAPE oval width=100pt height=100pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertShapeOperation>().Subject;
+        op.ShapeType.Should().Be("oval");
+        op.Width.Should().Be("100pt");
+        op.Height.Should().Be("100pt");
+        op.Left.Should().BeNull();
+        op.Top.Should().BeNull();
+    }
+
+    [Fact]
+    public void Parse_InsertTextbox_CanFollowOtherOperationsInBlock()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE powerpoint\n\nAT slide[1]\n" +
+            "INSERT TEXTBOX width=100pt height=40pt text=\"Note\"\n" +
+            "FORMAT bold=true\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks[0].Operations.Should().HaveCount(2);
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTextboxOperation>();
+        doc.OperationBlocks[0].Operations[1].Should().BeOfType<FormatOperation>();
+    }
 }

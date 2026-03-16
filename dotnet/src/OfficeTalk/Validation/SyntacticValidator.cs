@@ -149,6 +149,54 @@ public class SyntacticValidator
                         operation.Line));
                 }
                 break;
+
+            case InsertTextboxOperation textbox:
+                if (string.IsNullOrEmpty(textbox.Text))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT TEXTBOX operation requires a non-empty 'text' property.",
+                        operation.Line));
+                }
+                if (string.IsNullOrEmpty(textbox.Width))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT TEXTBOX operation requires a 'width' property.",
+                        operation.Line));
+                }
+                if (string.IsNullOrEmpty(textbox.Height))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT TEXTBOX operation requires a 'height' property.",
+                        operation.Line));
+                }
+                break;
+
+            case InsertShapeOperation shape:
+                if (string.IsNullOrEmpty(shape.ShapeType))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT SHAPE operation requires a shape type (e.g. rectangle, oval).",
+                        operation.Line));
+                }
+                if (string.IsNullOrEmpty(shape.Width))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT SHAPE operation requires a 'width' property.",
+                        operation.Line));
+                }
+                if (string.IsNullOrEmpty(shape.Height))
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidValue,
+                        "INSERT SHAPE operation requires a 'height' property.",
+                        operation.Line));
+                }
+                break;
         }
     }
 

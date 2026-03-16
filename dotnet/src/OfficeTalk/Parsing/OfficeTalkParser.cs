@@ -537,6 +537,20 @@ public class OfficeTalkParser
             return pos.HasValue ? new InsertSlideOperation { Position = pos.Value, Line = insToken.Line } : null;
         }
 
+        // INSERT TEXTBOX …
+        if (next.Type == TokenType.TEXTBOX)
+        {
+            Advance();
+            return ParseInsertTextboxBody(insToken);
+        }
+
+        // INSERT SHAPE shapeType …
+        if (next.Type == TokenType.SHAPE)
+        {
+            Advance();
+            return ParseInsertShapeBody(insToken);
+        }
+
         // INSERT BEFORE content
         if (next.Type == TokenType.BEFORE)
         {
@@ -565,6 +579,167 @@ public class OfficeTalkParser
 
         AddError($"Unexpected token '{next.Value}' after INSERT", next);
         return null;
+    }
+
+    /// <summary>
+    /// Parses the key=value properties that follow INSERT TEXTBOX.
+    /// Recognised keys: left, top, width, height, text, align.
+    /// </summary>
+    private InsertTextboxOperation ParseInsertTextboxBody(Token insertToken)
+    {
+        var op = new InsertTextboxOperation { Line = insertToken.Line };
+
+        while (!IsAtEnd() && Current().Type != TokenType.NewLine
+            && Current().Type != TokenType.EOF
+            && Current().Type != TokenType.AT
+            && Current().Type != TokenType.PROPERTY)
+        {
+            if (Current().Type == TokenType.Comment)
+            {
+                Advance();
+                break;
+            }
+
+            if (Current().Type == TokenType.Comma)
+            {
+                Advance();
+                continue;
+            }
+
+            if (Current().Type != TokenType.Identifier && !IsSegmentKeyword(Current().Type))
+                break;
+
+            var key = Current().Value;
+            Advance();
+
+            if (IsAtEnd() || Current().Type != TokenType.Equals)
+            {
+                AddError($"Expected '=' after INSERT TEXTBOX property '{key}'", insertToken);
+                break;
+            }
+            Advance(); // skip =
+
+            if (IsAtEnd())
+            {
+                AddError($"Expected value for INSERT TEXTBOX property '{key}'", insertToken);
+                break;
+            }
+
+            var valueToken = Current();
+            Advance();
+
+            switch (key.ToLowerInvariant())
+            {
+                case "text":
+                    op.Text = valueToken.Value;
+                    break;
+                case "left":
+                    op.Left = valueToken.Value;
+                    break;
+                case "top":
+                    op.Top = valueToken.Value;
+                    break;
+                case "width":
+                    op.Width = valueToken.Value;
+                    break;
+                case "height":
+                    op.Height = valueToken.Value;
+                    break;
+                case "align":
+                    op.Align = valueToken.Value;
+                    break;
+                default:
+                    AddError($"Unknown INSERT TEXTBOX property '{key}'", insertToken);
+                    break;
+            }
+        }
+
+        return op;
+    }
+
+    /// <summary>
+    /// Parses the optional shape-type identifier followed by key=value geometry properties
+    /// that follow INSERT SHAPE.
+    /// Recognised keys: left, top, width, height.
+    /// </summary>
+    private InsertShapeOperation ParseInsertShapeBody(Token insertToken)
+    {
+        var op = new InsertShapeOperation { Line = insertToken.Line };
+
+        // Optional shape-type identifier (e.g. rectangle, oval) — must appear before the first key=value pair
+        if (!IsAtEnd() && (Current().Type == TokenType.Identifier || Current().Type == TokenType.String)
+            && PeekTokenType(1) != TokenType.Equals)
+        {
+            op.ShapeType = Current().Value;
+            Advance();
+        }
+
+        while (!IsAtEnd() && Current().Type != TokenType.NewLine
+            && Current().Type != TokenType.EOF
+            && Current().Type != TokenType.AT
+            && Current().Type != TokenType.PROPERTY)
+        {
+            if (Current().Type == TokenType.Comment)
+            {
+                Advance();
+                break;
+            }
+
+            if (Current().Type == TokenType.Comma)
+            {
+                Advance();
+                continue;
+            }
+
+            if (Current().Type != TokenType.Identifier && !IsSegmentKeyword(Current().Type))
+                break;
+
+            var key = Current().Value;
+            Advance();
+
+            if (IsAtEnd() || Current().Type != TokenType.Equals)
+            {
+                AddError($"Expected '=' after INSERT SHAPE property '{key}'", insertToken);
+                break;
+            }
+            Advance(); // skip =
+
+            if (IsAtEnd())
+            {
+                AddError($"Expected value for INSERT SHAPE property '{key}'", insertToken);
+                break;
+            }
+
+            var valueToken = Current();
+            Advance();
+
+            switch (key.ToLowerInvariant())
+            {
+                case "left":
+                    op.Left = valueToken.Value;
+                    break;
+                case "top":
+                    op.Top = valueToken.Value;
+                    break;
+                case "width":
+                    op.Width = valueToken.Value;
+                    break;
+                case "height":
+                    op.Height = valueToken.Value;
+                    break;
+                default:
+                    AddError($"Unknown INSERT SHAPE property '{key}'", insertToken);
+                    break;
+            }
+        }
+
+        return op;
+    }
+
+    private TokenType PeekTokenType(int offset)
+    {
+        int idx = _pos + offset;
+        return idx < _tokens.Count ? _tokens[idx].Type : TokenType.EOF;
     }
 
     private InsertPosition? ParseInsertPosition(Token context)
@@ -882,5 +1057,6 @@ public class OfficeTalkParser
             or TokenType.SET or TokenType.FORMAT or TokenType.REPLACE or TokenType.INSERT
             or TokenType.APPEND or TokenType.PREPEND or TokenType.MERGE or TokenType.TO
             or TokenType.ALL or TokenType.EACH or TokenType.AT or TokenType.WITH
-            or TokenType.PROPERTY or TokenType.DocTypeKeyword;
+            or TokenType.PROPERTY or TokenType.DocTypeKeyword
+            or TokenType.TEXTBOX or TokenType.SHAPE;
 }

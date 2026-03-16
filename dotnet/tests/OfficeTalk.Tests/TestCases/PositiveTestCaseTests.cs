@@ -181,6 +181,36 @@ public class PositiveTestCaseTests
                     expected.GetProperty("position").GetString(), context);
                 break;
 
+            case "INSERT_TEXTBOX":
+                actual.Should().BeOfType<InsertTextboxOperation>(context);
+                var insertTextboxOp = (InsertTextboxOperation)actual;
+                insertTextboxOp.Text.Should().Be(expected.GetProperty("text").GetString(), context);
+                if (expected.TryGetProperty("left", out var tbLeft))
+                    insertTextboxOp.Left.Should().Be(tbLeft.GetString(), context);
+                if (expected.TryGetProperty("top", out var tbTop))
+                    insertTextboxOp.Top.Should().Be(tbTop.GetString(), context);
+                if (expected.TryGetProperty("width", out var tbWidth))
+                    insertTextboxOp.Width.Should().Be(tbWidth.GetString(), context);
+                if (expected.TryGetProperty("height", out var tbHeight))
+                    insertTextboxOp.Height.Should().Be(tbHeight.GetString(), context);
+                if (expected.TryGetProperty("align", out var tbAlign))
+                    insertTextboxOp.Align.Should().Be(tbAlign.GetString(), context);
+                break;
+
+            case "INSERT_SHAPE":
+                actual.Should().BeOfType<InsertShapeOperation>(context);
+                var insertShapeOp = (InsertShapeOperation)actual;
+                insertShapeOp.ShapeType.Should().Be(expected.GetProperty("shapeType").GetString(), context);
+                if (expected.TryGetProperty("left", out var shLeft))
+                    insertShapeOp.Left.Should().Be(shLeft.GetString(), context);
+                if (expected.TryGetProperty("top", out var shTop))
+                    insertShapeOp.Top.Should().Be(shTop.GetString(), context);
+                if (expected.TryGetProperty("width", out var shWidth))
+                    insertShapeOp.Width.Should().Be(shWidth.GetString(), context);
+                if (expected.TryGetProperty("height", out var shHeight))
+                    insertShapeOp.Height.Should().Be(shHeight.GetString(), context);
+                break;
+
             case "SET_CELLS":
                 actual.Should().BeOfType<SetCellsOperation>(context);
                 var setCellsOp = (SetCellsOperation)actual;
