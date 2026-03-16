@@ -574,6 +574,160 @@ AT sheet["Notes"]/A1
 PREPEND "UPDATED: "
 ```
 
+#### 5.1.6. INSERT IMAGE
+
+Inserts an image before or after the addressed element. The image source
+is specified as a file path or URL in a quoted string.
+
+```
+AT body/paragraph[3]
+INSERT IMAGE AFTER "charts/revenue-q1.png"
+
+AT body/heading[text="Results"]
+INSERT IMAGE AFTER "https://example.com/diagram.png"
+  alt="Architecture diagram"
+  width=6in
+  height=4in
+```
+
+Image properties are specified as `key=value` pairs on indented lines
+following the INSERT IMAGE line:
+
+| Property | Type   | Description |
+|----------|--------|-------------|
+| `alt`    | string | Alt text for accessibility |
+| `width`  | length | Display width |
+| `height` | length | Display height |
+| `position` | enum | `inline` (default) or `anchor` (Word only) |
+
+If only `width` or `height` is specified, the other dimension is computed
+to maintain the original aspect ratio. If neither is specified, the image
+is inserted at its native dimensions.
+
+The image source MUST be a file path (relative to the working directory)
+or an HTTPS URL. Implementations MUST resolve relative paths against the
+working directory, not the OfficeTalk document location. Implementations
+MUST NOT follow redirects to non-HTTPS URLs.
+
+In Word documents, INSERT IMAGE BEFORE/AFTER inserts the image as a new
+paragraph-level element (an inline drawing within its own paragraph). In
+PowerPoint documents, the image is inserted as a new picture shape on the
+addressed slide.
+
+#### 5.1.7. INSERT TABLE
+
+Creates a new table before or after the addressed element with the
+specified dimensions.
+
+```
+AT body/heading[text="Results"]
+INSERT TABLE AFTER rows=3, columns=4
+```
+
+The table is created with empty cells. Use subsequent SET CELLS operations
+to populate the table content:
+
+```
+AT body/heading[text="Results"]
+INSERT TABLE AFTER rows=3, columns=4
+SET CELLS "Product", "Q1", "Q2", "Q3"
+
+AT body/table[caption="Results"]/row[2]
+SET CELLS "Widget A", "100", "120", "135"
+
+AT body/table[caption="Results"]/row[3]
+SET CELLS "Widget B", "200", "210", "225"
+```
+
+Table properties may be specified as indented `key=value` pairs:
+
+| Property | Type   | Description |
+|----------|--------|-------------|
+| `rows`   | number | Number of rows (required) |
+| `columns` | number | Number of columns (required) |
+| `caption` | string | Table caption / alt text |
+| `width`  | length | Table width (default: 100% of page width) |
+
+The first SET CELLS operation in the same block populates the first row
+of the newly inserted table. INSERT TABLE is valid in Word and PowerPoint
+documents.
+
+#### 5.1.8. LINK
+
+Creates or replaces a hyperlink on the addressed text. The target URL is
+a quoted string.
+
+```
+AT body/paragraph[1]/run[text="click here"]
+LINK "https://example.com/report"
+
+AT body/paragraph[3]/run[text="OfficeTalk specification"]
+LINK "https://github.com/spec-works/OfficeTalk"
+```
+
+LINK creates a clickable hyperlink on the addressed run or element. When
+applied to a paragraph, the entire paragraph text becomes a hyperlink.
+When applied to a run, only that run's text is linked.
+
+LINK can follow a SET or INSERT operation to create linked text in a single
+block:
+
+```
+AT body/paragraph[3]
+INSERT AFTER "See the full report."
+LINK "https://example.com/report"
+```
+
+To remove a hyperlink, use FORMAT:
+
+```
+AT body/paragraph[1]/run[text="click here"]
+FORMAT href=none
+```
+
+#### 5.1.9. INSERT LIST
+
+Creates a new bulleted or numbered list before or after the addressed
+element.
+
+```
+AT body/heading[text="Action Items"]
+INSERT LIST AFTER unordered
+  ITEM "Review the Q1 financials"
+  ITEM "Schedule follow-up meeting"
+  ITEM "Update the project timeline"
+
+AT body/paragraph[5]
+INSERT LIST AFTER ordered
+  ITEM "First, gather requirements"
+  ITEM "Second, create the design"
+  ITEM "Third, implement and test"
+```
+
+| Modifier | Description |
+|----------|-------------|
+| `ordered` | Numbered list (1, 2, 3...) |
+| `unordered` | Bulleted list (default) |
+
+Each `ITEM` line specifies one list item as a quoted string or content
+block. Items are added in order.
+
+Nested lists use indented ITEM lines with a sub-list modifier:
+
+```
+AT body/heading[text="Overview"]
+INSERT LIST AFTER unordered
+  ITEM "Backend services"
+    ITEM "Authentication" nested
+    ITEM "Database" nested
+  ITEM "Frontend components"
+    ITEM "Dashboard" nested
+    ITEM "Settings page" nested
+```
+
+Items marked `nested` become children of the preceding non-nested item,
+creating a sub-list.
+
 ### 5.2. Formatting Operations
 
 #### 5.2.1. FORMAT
@@ -618,6 +772,66 @@ STYLE "Heading 2"
 
 AT body/table[1]
 STYLE "Grid Table 4 - Accent 1"
+```
+
+#### 5.2.3. SET RUNS
+
+Replaces the content of the addressed element with a sequence of
+individually formatted text runs. This enables mixed formatting within
+a single paragraph — a requirement for content generated from Markdown
+or other rich-text sources.
+
+```
+AT body/paragraph[3]
+SET RUNS
+  RUN "This is "
+  RUN "bold text" bold=true
+  RUN " and "
+  RUN "italic text" italic=true
+  RUN " in one paragraph."
+```
+
+Each `RUN` line specifies text content as a quoted string, followed by
+optional `key=value` formatting properties. Supported properties are the
+same as the text (run) properties defined in §7.1.
+
+RUN lines MUST be indented by at least two spaces relative to the SET RUNS
+line.
+
+SET RUNS replaces all existing content in the addressed element. After
+execution, the element contains exactly the specified runs in order, each
+with its declared formatting.
+
+Run-level hyperlinks are specified with the `href` property:
+
+```
+AT body/paragraph[1]
+SET RUNS
+  RUN "Visit "
+  RUN "our website" href="https://example.com", color=#2B579A, underline=single
+  RUN " for more information."
+```
+
+Run-level inline code is expressed with font properties:
+
+```
+AT body/paragraph[2]
+SET RUNS
+  RUN "Use the "
+  RUN "officetalk" font-name="Consolas", font-size=10pt, highlight=#F0F0F0
+  RUN " command to apply changes."
+```
+
+SET RUNS with content blocks for runs containing special characters:
+
+```
+AT body/paragraph[4]
+SET RUNS
+  RUN <<<
+Text with "quotes" and other special characters.
+>>>
+  RUN " followed by " bold=true
+  RUN "more text."
 ```
 
 ### 5.3. Structural Operations
@@ -977,6 +1191,7 @@ Rules for content blocks:
 | `subscript` | boolean | Subscript position |
 | `small-caps` | boolean | Small capitals |
 | `all-caps` | boolean | All capitals |
+| `href` | string | Hyperlink URL (creates clickable link on the run). Use `none` to remove. |
 
 ### 7.2. Paragraph Properties
 
@@ -1440,7 +1655,76 @@ AT heading[text="Key Risks"]/paragraph[1]
 COMMENT "Legal team should review this section before publication."
 ```
 
-### 12.9. Excel: Inspect Sheet Structure
+### 12.9. Word: Rich Content with Formatted Runs
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Create a paragraph with mixed formatting
+AT body/heading[text="Getting Started"]/paragraph[1]
+SET RUNS
+  RUN "Install the CLI with "
+  RUN "dotnet tool install" font-name="Consolas", font-size=10pt, highlight=#F5F5F5
+  RUN " and verify with "
+  RUN "markmyword version" font-name="Consolas", font-size=10pt, highlight=#F5F5F5
+  RUN "."
+
+# Insert a paragraph with a hyperlink
+AT body/paragraph[5]
+INSERT AFTER "For details, see the specification."
+LINK "https://github.com/spec-works/OfficeTalk"
+```
+
+### 12.10. Word: Insert Images and Tables
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Insert a diagram after the architecture heading
+AT body/heading[text="Architecture"]
+INSERT IMAGE AFTER "diagrams/system-overview.png"
+  alt="System architecture overview"
+  width=6in
+
+# Create a comparison table
+AT body/heading[text="Comparison"]
+INSERT TABLE AFTER rows=4, columns=3
+SET CELLS "Feature", "Option A", "Option B"
+
+AT body/table[2]/row[2]
+SET CELLS "Performance", "High", "Medium"
+
+AT body/table[2]/row[3]
+SET CELLS "Cost", "$500/mo", "$200/mo"
+
+AT body/table[2]/row[4]
+SET CELLS "Support", "24/7", "Business hours"
+```
+
+### 12.11. Word: Insert Lists
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Insert an action items list
+AT body/heading[text="Next Steps"]
+INSERT LIST AFTER unordered
+  ITEM "Review the Q1 financials"
+  ITEM "Schedule follow-up meeting"
+  ITEM "Update the project timeline"
+
+# Insert a numbered procedure
+AT body/heading[text="Installation"]
+INSERT LIST AFTER ordered
+  ITEM "Download the installer from the releases page"
+  ITEM "Run the setup wizard"
+  ITEM "Verify the installation"
+```
+
+### 12.12. Excel: Inspect Sheet Structure
 
 ```
 OFFICETALK/1.0
@@ -1455,7 +1739,7 @@ INSPECT sheet["Q1 Budget"]
   INCLUDE content
 ```
 
-### 12.10. Word: Inspect Document Outline
+### 12.13. Word: Inspect Document Outline
 
 ```
 OFFICETALK/1.0
@@ -1471,7 +1755,7 @@ INSPECT body/heading[text="Conclusion"]
   CONTEXT 3
 ```
 
-### 12.11. PowerPoint: Inspect Slide Deck
+### 12.14. PowerPoint: Inspect Slide Deck
 
 ```
 OFFICETALK/1.0
@@ -1488,7 +1772,7 @@ INSPECT slide[3]
   INCLUDE content, properties
 ```
 
-### 12.12. Excel: Inspect Cell with Properties
+### 12.15. Excel: Inspect Cell with Properties
 
 ```
 OFFICETALK/1.0
@@ -1530,6 +1814,7 @@ sheet-block      = ("ADD SHEET" / "DELETE SHEET" / "RENAME SHEET") SP quoted-str
 
 operation-line   = ( set-op / replace-op / insert-op / delete-op
                    / append-op / prepend-op / format-op / style-op
+                   / set-runs-op / link-op
                    / structural-op / comment-op ) LF
 
 ; --- Content Operations ---
@@ -1538,10 +1823,27 @@ cells-clause     = "CELLS" SP quoted-string *( "," SP quoted-string )
 replace-op       = ["REPLACE" / "REPLACE ALL"] SP quoted-string SP "WITH" SP
                    ( quoted-string / content-block )
 insert-op        = ( "INSERT BEFORE" / "INSERT AFTER" ) SP
-                   ( quoted-string / content-block / slide-props )
+                   ( quoted-string / content-block / slide-props
+                   / image-clause / table-clause / list-clause )
 delete-op        = "DELETE" [ SP ( "ROW" / "COLUMN" / "SLIDE" / "SHEET" ) ]
 append-op        = "APPEND" SP ( quoted-string / content-block )
 prepend-op       = "PREPEND" SP ( quoted-string / content-block )
+
+image-clause     = "IMAGE" SP ( "BEFORE" / "AFTER" ) SP quoted-string
+                   *( LF indent image-prop )
+image-prop       = ( "alt" / "width" / "height" / "position" ) "=" prop-value
+
+table-clause     = "TABLE" SP ( "BEFORE" / "AFTER" ) SP table-dims
+                   *( LF indent table-prop )
+table-dims       = "rows=" 1*DIGIT "," SP "columns=" 1*DIGIT
+table-prop       = ( "caption" / "width" ) "=" prop-value
+
+list-clause      = "LIST" SP ( "BEFORE" / "AFTER" ) SP [ list-type ]
+                   1*( LF indent item-line )
+list-type        = "ordered" / "unordered"
+item-line        = "ITEM" SP ( quoted-string / content-block ) [ SP "nested" ]
+
+link-op          = "LINK" SP quoted-string
 
 ; --- Formatting Operations ---
 format-op        = "FORMAT" SP property-list
@@ -1549,6 +1851,12 @@ property-list    = property *( "," SP property )
 property         = key "=" prop-value
 prop-value       = quoted-string / number / boolean / color / length
 style-op         = "STYLE" SP quoted-string
+
+; --- Set Runs Operation ---
+set-runs-op      = "SET RUNS" LF 1*( indent run-line LF )
+run-line         = "RUN" SP ( quoted-string / content-block )
+                   *( SP run-prop )
+run-prop         = key "=" prop-value
 
 ; --- Structural Operations ---
 structural-op    = row-op / column-op / merge-op / slide-op
