@@ -9,16 +9,23 @@
 ## Abstract
 
 This document defines the `application/officetalk` media type, a structured
-document format for expressing deterministic modifications to Microsoft Office
+document format for expressing deterministic operations on Microsoft Office
 documents (Word, Excel, PowerPoint). OfficeTalk provides a human-readable,
 LLM-friendly grammar for addressing content within Office documents and
-specifying precise operations to transform that content.
+specifying precise operations to read or transform that content.
+
+OfficeTalk supports two classes of operation: **write operations** that modify
+document content (SET, DELETE, FORMAT, etc.) and **inspect operations** that
+read document structure and content without modification. A single OfficeTalk
+document contains either write operations or inspect operations, never both.
 
 OfficeTalk documents can be produced by any source: large language models,
 command-line tools, template engines, scripted pipelines, or hand-authored by
 developers. They are executed by an implementation library built on the Office
-Open XML SDK. All operations are deterministic: given the same OfficeTalk
+Open XML SDK. All write operations are deterministic: given the same OfficeTalk
 document and the same input Office document, the result is always identical.
+Inspect operations produce structured JSONL responses describing the target
+document's content and structure.
 
 ## Table of Contents
 
@@ -35,6 +42,7 @@ document and the same input Office document, the result is always identical.
 11. [IANA Considerations](#11-iana-considerations)
 12. [Examples](#12-examples)
 13. [Formal Grammar](#13-formal-grammar)
+14. [Response Format](#14-response-format)
 
 ---
 
@@ -133,9 +141,22 @@ The `DOCTYPE` line declares the target document type. Valid values are:
 | `excel` | Excel workbooks (.xlsx) |
 | `powerpoint` | PowerPoint presentations (.pptx) |
 
-### 3.2. Operation Blocks
+### 3.2. Document Classification
 
-The body of an OfficeTalk document consists of one or more operation blocks,
+An OfficeTalk document is either a **write document** or a **read document**:
+
+- A **write document** contains operation blocks (§3.3) and optional property
+  settings (§5.4). It modifies the target document.
+- A **read document** contains inspect blocks (§3.4). It reads the target
+  document without modification.
+
+A single OfficeTalk document MUST NOT contain both write operations
+(`AT` blocks, `PROPERTY` statements) and `INSPECT` operations. Implementations
+MUST reject documents that mix the two.
+
+### 3.3. Operation Blocks
+
+The body of a write document consists of one or more operation blocks,
 separated by blank lines. Each block begins with an `AT` line specifying the
 target address, followed by one or more operation lines:
 
@@ -167,7 +188,30 @@ content-producing operation (SET, INSERT BEFORE, INSERT AFTER) is followed by
 a FORMAT or STYLE operation in the same block, the formatting applies to the
 content just produced.
 
-### 3.3. Comments
+### 3.4. Inspect Blocks
+
+The body of a read document consists of one or more inspect blocks,
+separated by blank lines. Each block begins with an `INSPECT` line
+specifying the target address, optionally followed by indented modifier
+lines:
+
+```
+INSPECT <address>
+  [DEPTH <integer>]
+  [INCLUDE <layer> *("," <layer>)]
+  [CONTEXT <integer>]
+```
+
+Multiple `INSPECT` blocks in a single document are processed sequentially.
+Each produces one result object in the JSONL response (see
+[Section 14](#14-response-format)).
+
+Inspect blocks reuse the same address syntax as operation blocks
+([Section 4](#4-addressing)). An `INSPECT` address MAY resolve to one or
+multiple elements; unlike `AT`, no ambiguity error is raised when multiple
+elements match.
+
+### 3.5. Comments
 
 Lines beginning with `#` are comments and MUST be ignored by parsers.
 Comments MAY appear anywhere except within content blocks.
@@ -179,12 +223,14 @@ AT body/paragraph[1]
 REPLACE "Hello" WITH "Welcome"
 ```
 
-### 3.4. Whitespace and Line Endings
+### 3.6. Whitespace and Line Endings
 
 - Lines are terminated by `LF` (U+000A) or `CRLF` (U+000D U+000A).
 - Leading and trailing whitespace on operation lines is ignored.
 - Blank lines (containing only whitespace) separate operation blocks.
-- Indentation is not significant except within content blocks.
+- Indentation is not significant except within content blocks and
+  INSPECT modifier lines (DEPTH, INCLUDE, CONTEXT), which MUST be
+  indented by at least two spaces relative to their INSPECT line.
 
 ---
 
@@ -692,6 +738,128 @@ COMMENT is additive: applying a COMMENT operation to an element that already
 has comments MUST NOT remove existing comments. Multiple COMMENT operations
 on the same element create multiple distinct comments.
 
+### 5.6. Inspect Operations
+
+#### 5.6.1. INSPECT
+
+Resolves an address against the target document and returns a structured
+description of the matched elements.
+
+```
+INSPECT <address>
+  [DEPTH <integer>]
+  [INCLUDE <layer> *("," <layer>)]
+  [CONTEXT <integer>]
+```
+
+**Modifiers:**
+
+| Keyword   | Type    | Default | Description |
+|-----------|---------|---------|-------------|
+| `DEPTH`   | integer | 0       | Levels of child elements to include. 0 = matched element only. |
+| `INCLUDE` | layers  | (none)  | Comma-separated list: `content`, `properties`, or both. |
+| `CONTEXT` | integer | 0       | Number of sibling elements before and after to include. |
+
+When no `INCLUDE` is specified, only addressing information is returned
+(element type, position, identity). This is the most lightweight mode —
+suitable for confirming an address resolves correctly or mapping document
+structure.
+
+#### 5.6.2. Examples
+
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+# Discover what sheets exist (addressing only)
+INSPECT sheet[1]
+
+# See all rows in the Q1 Budget sheet with their values
+INSPECT sheet["Q1 Budget"]
+  DEPTH 1
+  INCLUDE content
+
+# Get formatting details for a specific cell
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content, properties
+
+# See a cell with its neighbors
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content
+  CONTEXT 2
+```
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Get the document outline — all headings
+INSPECT body/heading
+  INCLUDE content
+
+# Inspect a specific heading with its surrounding paragraphs
+INSPECT body/heading[text="Conclusion"]
+  INCLUDE content
+  CONTEXT 3
+
+# See a table's full structure with formatting
+INSPECT body/table[1]
+  DEPTH 2
+  INCLUDE content, properties
+```
+
+```
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+# Outline all slides (titles only)
+INSPECT slide
+  DEPTH 1
+  INCLUDE content
+
+# Full detail on slide 3 including comments
+INSPECT slide[3]
+  DEPTH 1
+  INCLUDE content, properties
+```
+
+#### 5.6.3. Semantics
+
+An OfficeTalk document containing INSPECT operations is a **read document**.
+It MUST NOT contain AT blocks, PROPERTY statements, or any write operations.
+Implementations MUST reject documents that mix INSPECT and write operations.
+
+Multiple INSPECT operations in a single document are processed sequentially.
+Each INSPECT produces one result object in the JSONL response
+([Section 14](#14-response-format)).
+
+INSPECT operations do not modify the target document.
+
+#### 5.6.4. Detail Layers
+
+The `INCLUDE` keyword controls which information layers are returned for each
+matched element. Layers are additive.
+
+**Addressing (always included):**
+
+Structural identity of the element — type, position within its container,
+and type-specific identifiers (sheet name, cell reference, placeholder type,
+heading level, style name).
+
+**Content (`INCLUDE content`):**
+
+The textual content of the element. For cells, the display value. For
+paragraphs, the full text. For shapes, the text content. For rows, the
+cell values. Content is not included by default to keep responses lightweight
+when only structure is needed.
+
+**Properties (`INCLUDE properties`):**
+
+Formatting and metadata properties of the element. Font name, size, bold,
+italic, color, fill, borders, number format, alignment. Properties are
+expensive to compute and verbose in output — only requested when the caller
+needs to reason about or modify formatting.
+
 ---
 
 ## 6. Data Types
@@ -864,7 +1032,16 @@ Rules for content blocks:
 ### 8.1. Overview
 
 Processing an OfficeTalk document against a target Office document proceeds
-in three phases: resolution, validation, and execution.
+differently depending on whether the document is a read document or a write
+document.
+
+**Write documents** are processed in three phases: resolution, validation,
+and execution.
+
+**Read documents** (containing INSPECT operations) are processed by
+resolving each INSPECT address, gathering the requested detail layers, and
+producing JSONL response output. INSPECT processing does not modify the target
+document.
 
 ### 8.2. Resolution Phase
 
@@ -916,6 +1093,30 @@ blocks that target the same or overlapping elements:
 - A DELETE followed by a FORMAT on the same element (error).
 - Overlapping MERGE CELLS operations (error).
 
+### 8.6. INSPECT Processing
+
+For read documents, the implementation processes each INSPECT block
+sequentially:
+
+1. **Resolve** the address against the target document. Unlike write
+   operations, INSPECT addresses MAY match multiple elements without
+   raising an ambiguity error.
+2. **Gather detail layers** — For each matched element, collect the
+   addressing layer (always), content layer (if `INCLUDE content` is
+   specified), and properties layer (if `INCLUDE properties` is specified).
+3. **Expand children** — If `DEPTH > 0`, recursively gather detail layers
+   for child elements up to the specified depth.
+4. **Gather context** — If `CONTEXT > 0`, include the specified number of
+   sibling elements before and after each matched element. Context elements
+   include the same detail layers as the matched element.
+5. **Include comments** — If the matched element (or its children/context
+   elements) has comments, include them in the response regardless of the
+   `INCLUDE` setting.
+6. **Emit response** — Produce a JSONL response object for the INSPECT
+   block (see [Section 14](#14-response-format)).
+
+INSPECT processing MUST NOT modify the target document.
+
 ---
 
 ## 9. Validation
@@ -932,6 +1133,9 @@ Syntactic errors include:
 - Malformed addresses (unbalanced brackets, invalid segments)
 - Unterminated strings or content blocks
 - Invalid data type literals (e.g., malformed color codes)
+- Mixing INSPECT operations with write operations (AT blocks or PROPERTY)
+- Invalid INSPECT modifier values (e.g., non-integer DEPTH)
+- Unknown INCLUDE layer names (only `content` and `properties` are valid)
 
 ### 9.2. Semantic Validation
 
@@ -958,6 +1162,7 @@ Semantic validation requires access to the target document. It verifies:
 | `SEARCH_NOT_FOUND` | REPLACE search text not found in target |
 | `CONFLICT` | Conflicting operations on same element |
 | `STRUCTURAL` | Invalid structural operation |
+| `MIXED_OPERATIONS` | Document mixes INSPECT and write operations |
 
 ### 9.4. Warnings
 
@@ -1009,6 +1214,20 @@ Published specification: This document
 Applications:            Microsoft Office document transformation
 Fragment identifier:     OfficeTalk address path (Section 4)
 File extension:          .otk
+```
+
+### 11.2. Response Media Type Registration
+
+```
+Type name:               application
+Subtype name:            officetalk-response+jsonl
+Required parameters:     none
+Optional parameters:     none
+Encoding considerations: UTF-8
+Security considerations: See Section 10
+Published specification: This document
+Applications:            OfficeTalk INSPECT and operation responses
+File extension:          .jsonl
 ```
 
 ---
@@ -1221,6 +1440,70 @@ AT heading[text="Key Risks"]/paragraph[1]
 COMMENT "Legal team should review this section before publication."
 ```
 
+### 12.9. Excel: Inspect Sheet Structure
+
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+# Discover what sheets exist
+INSPECT sheet[1]
+
+# See all rows with their values
+INSPECT sheet["Q1 Budget"]
+  DEPTH 1
+  INCLUDE content
+```
+
+### 12.10. Word: Inspect Document Outline
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+# Get all headings with their text
+INSPECT body/heading
+  INCLUDE content
+
+# See a heading with surrounding paragraphs for context
+INSPECT body/heading[text="Conclusion"]
+  INCLUDE content
+  CONTEXT 3
+```
+
+### 12.11. PowerPoint: Inspect Slide Deck
+
+```
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+# Get all slide titles
+INSPECT slide
+  DEPTH 1
+  INCLUDE content
+
+# Full detail on a specific slide
+INSPECT slide[3]
+  DEPTH 1
+  INCLUDE content, properties
+```
+
+### 12.12. Excel: Inspect Cell with Properties
+
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+# Get cell value and formatting
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content, properties
+
+# See a cell in context with its neighbors
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content
+  CONTEXT 2
+```
+
 ---
 
 ## 13. Formal Grammar
@@ -1238,7 +1521,8 @@ version          = 1*DIGIT "." 1*DIGIT
 doctype-line     = "DOCTYPE" SP doctype LF
 doctype          = "word" / "excel" / "powerpoint"
 
-block            = ( operation-block / property-block / sheet-block )
+block            = ( operation-block / property-block / sheet-block
+                   / inspect-block )
 operation-block  = address-line 1*( operation-line / comment-line )
 address-line     = "AT" [ SP "EACH" ] SP address LF
 property-block   = "PROPERTY" SP key "=" value LF
@@ -1277,6 +1561,20 @@ slide-props      = *( set-op LF )
 
 ; --- Annotation Operations ---
 comment-op       = "COMMENT" SP ( quoted-string / content-block )
+
+; --- Inspect Operations ---
+inspect-block    = "INSPECT" SP address LF
+                   *( inspect-modifier / comment-line )
+
+inspect-modifier = depth-modifier / include-modifier / context-modifier
+
+depth-modifier   = indent "DEPTH" SP 1*DIGIT LF
+include-modifier = indent "INCLUDE" SP layer *( "," SP layer ) LF
+context-modifier = indent "CONTEXT" SP 1*DIGIT LF
+
+layer            = "content" / "properties"
+
+indent           = 2*WSP
 
 ; --- Address ---
 address          = segment *( "/" segment )
@@ -1321,6 +1619,294 @@ SP               = %x20
 WSP              = SP / %x09
 UTF8-tail        = %x80-BF
 ```
+
+---
+
+## 14. Response Format
+
+### 14.1. Overview
+
+OfficeTalk defines a JSONL (JSON Lines) response format for communicating
+results back to callers. Each line in the response is a self-contained JSON
+object terminated by a newline (`\n`).
+
+The response format applies to:
+
+- **INSPECT operations** — each INSPECT produces one response object
+  describing the matched elements.
+- **Write operations** — each AT block optionally produces one response
+  object reporting success or failure.
+
+The response format is OPTIONAL for write operations. Implementations MAY
+silently apply operations without producing response output. However,
+implementations that support INSPECT MUST produce JSONL responses.
+
+### 14.2. JSONL Framing
+
+Each response line is a complete JSON object. Responses are streamed one
+per line, enabling incremental processing by callers.
+
+```
+{"op":"inspect","address":"sheet[\"Q1 Budget\"]", ...}\n
+{"op":"inspect","address":"sheet[\"Q1 Budget\"]/D2", ...}\n
+```
+
+For write operations:
+
+```
+{"op":"set","address":"sheet[\"Q1 Budget\"]/D7","status":"ok"}\n
+{"op":"format","address":"sheet[\"Q1 Budget\"]/D7","status":"ok"}\n
+{"op":"comment","address":"sheet[\"Q1 Budget\"]/D2","status":"ok"}\n
+```
+
+### 14.3. Response Object Schema (CDDL)
+
+The response schema is defined using CDDL ([RFC 8610]).
+
+```cddl
+; Root response — one per JSONL line
+response = inspect-response / operation-response
+
+; ============================================================
+; INSPECT Response
+; ============================================================
+
+inspect-response = {
+  op:       "inspect"
+  address:  tstr                      ; the original address expression
+  matched:  uint                      ; number of elements matched
+  elements: [* element]               ; matched elements
+  ? error:  tstr                      ; present if address resolution failed
+}
+
+element = {
+  type:         element-type
+  ? index:      uint                  ; 1-based position in parent container
+  ? of:         uint                  ; total siblings in parent container
+  * identity                          ; type-specific identity fields
+  ? content:    content-info          ; present when INCLUDE content
+  ? properties: properties-info       ; present when INCLUDE properties
+  ? children:   [* element]           ; present when DEPTH > 0
+  ? comments:   [* comment-info]      ; present when element has comments
+  ? context:    context-info          ; present when CONTEXT > 0
+}
+
+element-type = "heading" / "paragraph" / "run" / "table" / "row"
+             / "cell" / "list" / "item" / "image" / "section"
+             / "bookmark" / "content-control"             ; Word
+             / "sheet" / "excel-row" / "excel-cell"       ; Excel
+             / "slide" / "shape"                          ; PowerPoint
+
+; Type-specific identity fields (always present in addressing layer)
+identity = (
+  ? level:       uint                 ; heading level (1-9)
+  ? style:       tstr                 ; applied style name
+  ? name:        tstr                 ; sheet name, shape name, bookmark name
+  ? reference:   tstr                 ; cell reference (e.g., "D2")
+  ? sheet:       tstr                 ; parent sheet name (for cells)
+  ? placeholder: tstr                 ; "title" / "subtitle" / "body" / "notes"
+  ? tag:         tstr                 ; content control tag
+)
+
+; Content layer — present when INCLUDE content is specified
+content-info = {
+  ? text:      tstr                   ; display text of the element
+  ? value:     tstr                   ; raw value (cells — may differ from text)
+  ? dataType:  tstr                   ; "string" / "number" / "boolean" / "date"
+  ? cells:     [* tstr]              ; cell values for a row (shorthand)
+}
+
+; Properties layer — present when INCLUDE properties is specified
+; Uses the same property names as the FORMAT operation (§7)
+properties-info = {
+  * tstr => any
+}
+
+; Comment information — always included when comments exist on the element
+comment-info = {
+  author:  tstr
+  text:    tstr
+  ? date:  tstr                       ; ISO 8601 datetime
+}
+
+; Context — sibling elements before and after the match
+context-info = {
+  before:  [* element]
+  after:   [* element]
+}
+
+; ============================================================
+; Operation Response
+; ============================================================
+
+operation-response = {
+  op:        operation-type
+  address:   tstr                     ; the AT address
+  status:    "ok" / "error" / "warning"
+  ? message: tstr                     ; human-readable detail
+  ? detail:  any                      ; operation-specific result data
+}
+
+operation-type = "set" / "replace" / "insert-before" / "insert-after"
+               / "delete" / "append" / "prepend" / "format" / "style"
+               / "comment" / "insert-row" / "insert-column"
+               / "merge-cells" / "duplicate" / "property"
+```
+
+### 14.4. INSPECT Response Examples
+
+#### Addressing only — Excel sheet discovery
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+INSPECT sheet[1]
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"sheet[1]","matched":1,"elements":[{"type":"sheet","index":1,"of":2,"name":"Q1 Budget"}]}
+```
+
+#### Content with depth — Excel sheet rows
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+INSPECT sheet["Q1 Budget"]
+  DEPTH 1
+  INCLUDE content
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"sheet[\"Q1 Budget\"]","matched":1,"elements":[{"type":"sheet","name":"Q1 Budget","children":[{"type":"excel-row","index":1,"content":{"cells":["Department","Q1 Budget","Q1 Actual","Variance"]}},{"type":"excel-row","index":2,"content":{"cells":["Engineering","150000","162000","-12000"]}}]}]}
+```
+
+#### Content and properties — Excel cell
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content, properties
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"sheet[\"Q1 Budget\"]/D2","matched":1,"elements":[{"type":"excel-cell","reference":"D2","sheet":"Q1 Budget","index":4,"of":4,"content":{"value":"-12000","dataType":"string"},"properties":{"bold":false,"font-name":"Calibri","font-size":"11pt","number-format":"General"}}]}
+```
+
+#### Content with context — cell neighbors
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+INSPECT sheet["Q1 Budget"]/D2
+  INCLUDE content
+  CONTEXT 1
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"sheet[\"Q1 Budget\"]/D2","matched":1,"elements":[{"type":"excel-cell","reference":"D2","sheet":"Q1 Budget","content":{"value":"-12000"},"context":{"before":[{"type":"excel-cell","reference":"D1","content":{"value":"Variance"}}],"after":[{"type":"excel-cell","reference":"D3","content":{"value":"5000"}}]}}]}
+```
+
+#### Word document outline
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+  INCLUDE content
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"body/heading","matched":3,"elements":[{"type":"heading","level":1,"index":1,"of":11,"style":"Heading1","content":{"text":"Introduction"}},{"type":"heading","level":1,"index":4,"of":11,"style":"Heading1","content":{"text":"Specifications"}},{"type":"heading","level":1,"index":7,"of":11,"style":"Heading1","content":{"text":"Getting Started"}}]}
+```
+
+#### PowerPoint slide overview
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+INSPECT slide
+  DEPTH 1
+  INCLUDE content
+```
+
+Response:
+```jsonl
+{"op":"inspect","address":"slide","matched":4,"elements":[{"type":"slide","index":1,"of":4,"children":[{"type":"shape","placeholder":"title","content":{"text":"Q1 Business Review"}},{"type":"shape","placeholder":"subtitle","content":{"text":"Prepared by: Finance Team"}}]},{"type":"slide","index":2,"of":4,"children":[{"type":"shape","placeholder":"title","content":{"text":"Revenue Highlights"}},{"type":"shape","placeholder":"body","content":{"text":"Total revenue: $2.4M (+12% YoY)"}}]}]}
+```
+
+### 14.5. Operation Response Examples
+
+Write operations optionally produce response lines reporting the outcome of
+each operation.
+
+Request:
+```
+OFFICETALK/1.0
+DOCTYPE excel
+
+AT sheet["Q1 Budget"]/D7
+SET "-9000"
+FORMAT bold=true, border-bottom=medium
+
+AT sheet["Q1 Budget"]/D2
+COMMENT "Verify contractor spend."
+```
+
+Response:
+```jsonl
+{"op":"set","address":"sheet[\"Q1 Budget\"]/D7","status":"ok"}
+{"op":"format","address":"sheet[\"Q1 Budget\"]/D7","status":"ok"}
+{"op":"comment","address":"sheet[\"Q1 Budget\"]/D2","status":"ok"}
+```
+
+Error example:
+```jsonl
+{"op":"set","address":"sheet[\"Missing\"]/A1","status":"error","message":"Address resolution failed: no sheet named 'Missing'."}
+```
+
+### 14.6. Content Type
+
+The JSONL response format is identified by the media type:
+
+```
+application/officetalk-response+jsonl
+```
+
+Implementations that accept OfficeTalk documents and produce responses
+SHOULD use this media type in Content-Type headers.
+
+### 14.7. Conformance
+
+An implementation MAY support INSPECT operations, write operations, or both.
+Implementations MUST declare which operation classes they support.
+
+An implementation that supports INSPECT:
+- MUST produce JSONL responses conforming to the CDDL schema in §14.3.
+- MUST support the DEPTH, INCLUDE, and CONTEXT modifiers.
+- MUST reject documents that mix INSPECT and write operations.
+
+An implementation that supports write operations:
+- MAY produce JSONL operation responses.
+- If it produces operation responses, they MUST conform to the CDDL schema.
 
 ---
 
@@ -1410,6 +1996,12 @@ described in RFC 9485, Section 5.3.
 - [RFC 6838] Freed, N., Klensin, J., and T. Hansen, "Media Type
   Specifications and Registration Procedures", BCP 13, RFC 6838,
   January 2013.
+- [RFC 7464] Williams, N., "JavaScript Object Notation (JSON) Text
+  Sequences", RFC 7464, February 2015.
+- [RFC 8610] Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
+  Definition Language (CDDL): A Notational Convention to Express Concise
+  Binary Object Representation (CBOR) and JSON Data Structures",
+  RFC 8610, June 2019.
 - [RFC 9485] Bormann, C. and T. Bray, "I-Regexp: An Interoperable
   Regular Expression Format", RFC 9485, October 2023.
 - [ECMA-376] ECMA International, "Office Open XML File Formats", ECMA-376,
