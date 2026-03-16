@@ -53,6 +53,12 @@ public class OfficeTalkParser
                 if (block != null)
                     doc.OperationBlocks.Add(block);
             }
+            else if (token.Type == TokenType.INSPECT)
+            {
+                var block = ParseInspectBlock();
+                if (block != null)
+                    doc.InspectBlocks.Add(block);
+            }
             else if (token.Type == TokenType.PROPERTY)
             {
                 var prop = ParsePropertySetting();
@@ -61,7 +67,7 @@ public class OfficeTalkParser
             }
             else
             {
-                AddError($"Unexpected token '{token.Value}', expected AT or PROPERTY", token);
+                AddError($"Unexpected token '{token.Value}', expected AT, INSPECT, or PROPERTY", token);
                 Advance();
             }
         }
@@ -180,6 +186,120 @@ public class OfficeTalkParser
         }
 
         return block;
+    }
+
+    private InspectBlock? ParseInspectBlock()
+    {
+        var inspectToken = Current();
+        Advance(); // skip INSPECT
+
+        var address = ParseAddress();
+        if (address == null)
+            return null;
+
+        var block = new InspectBlock
+        {
+            Address = address,
+            Line = inspectToken.Line
+        };
+
+        SkipNewLines();
+
+        // Parse modifiers (DEPTH, INCLUDE, CONTEXT) on subsequent indented lines
+        while (!IsAtEnd())
+        {
+            SkipCommentsAndNewLines();
+            if (IsAtEnd()) break;
+
+            var token = Current();
+
+            if (token.Type == TokenType.DEPTH)
+            {
+                Advance();
+                if (!IsAtEnd() && Current().Type == TokenType.Number)
+                {
+                    if (int.TryParse(Current().Value, out int depth))
+                        block.Depth = depth;
+                    else
+                        AddError($"Invalid DEPTH value: '{Current().Value}'", Current());
+                    Advance();
+                }
+                else
+                {
+                    AddError("Expected integer after DEPTH", token);
+                }
+            }
+            else if (token.Type == TokenType.INCLUDE)
+            {
+                Advance();
+                ParseIncludeLayers(block, token);
+            }
+            else if (token.Type == TokenType.CONTEXT)
+            {
+                Advance();
+                if (!IsAtEnd() && Current().Type == TokenType.Number)
+                {
+                    if (int.TryParse(Current().Value, out int context))
+                        block.Context = context;
+                    else
+                        AddError($"Invalid CONTEXT value: '{Current().Value}'", Current());
+                    Advance();
+                }
+                else
+                {
+                    AddError("Expected integer after CONTEXT", token);
+                }
+            }
+            else
+            {
+                break; // Not a modifier — end of this inspect block
+            }
+        }
+
+        return block;
+    }
+
+    private void ParseIncludeLayers(InspectBlock block, Token includeToken)
+    {
+        while (!IsAtEnd() && Current().Type != TokenType.NewLine && Current().Type != TokenType.EOF)
+        {
+            if (Current().Type == TokenType.Comma)
+            {
+                Advance();
+                continue;
+            }
+
+            if (Current().Type == TokenType.Identifier || IsSegmentKeyword(Current().Type))
+            {
+                var layerName = Current().Value.ToLowerInvariant();
+                if (layerName == "content")
+                {
+                    if (!block.Include.Contains(IncludeLayer.Content))
+                        block.Include.Add(IncludeLayer.Content);
+                    Advance();
+                }
+                else if (layerName == "properties")
+                {
+                    if (!block.Include.Contains(IncludeLayer.Properties))
+                        block.Include.Add(IncludeLayer.Properties);
+                    Advance();
+                }
+                else
+                {
+                    AddError($"Unknown INCLUDE layer: '{Current().Value}', expected 'content' or 'properties'", Current());
+                    Advance();
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (block.Include.Count == 0)
+        {
+            AddError("Expected at least one layer (content, properties) after INCLUDE", includeToken);
+        }
     }
 
     private PropertySetting? ParsePropertySetting()
@@ -882,5 +1002,6 @@ public class OfficeTalkParser
             or TokenType.SET or TokenType.FORMAT or TokenType.REPLACE or TokenType.INSERT
             or TokenType.APPEND or TokenType.PREPEND or TokenType.MERGE or TokenType.TO
             or TokenType.ALL or TokenType.EACH or TokenType.AT or TokenType.WITH
-            or TokenType.PROPERTY or TokenType.DocTypeKeyword;
+            or TokenType.PROPERTY or TokenType.DocTypeKeyword
+            or TokenType.DEPTH or TokenType.INCLUDE or TokenType.CONTEXT;
 }

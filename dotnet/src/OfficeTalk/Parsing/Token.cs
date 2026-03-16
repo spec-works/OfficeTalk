@@ -60,6 +60,12 @@ public enum TokenType
     DUPLICATE,
     COMMENT_KW,
 
+    // Inspect keywords
+    INSPECT,
+    DEPTH,
+    INCLUDE,
+    CONTEXT,
+
     // Document type values
     Word,
     Excel,
