@@ -535,4 +535,139 @@ SET ""Updated text""
         doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertAfterOperation>();
         doc.OperationBlocks[0].Operations[1].Should().BeOfType<LinkOperation>();
     }
+
+    // ================ New spec properties (background-color, borders) ================
+
+    [Fact]
+    public void Parse_Format_BackgroundColor_ParsesAsProperty()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT background-color=#F0F0F0\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties.Should().ContainKey("background-color");
+        format.Properties["background-color"].Should().Be("#F0F0F0");
+    }
+
+    [Fact]
+    public void Parse_Format_ParagraphBorders_AllProperties()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT border-bottom=single, border-color=#CCCCCC, border-width=1pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties.Should().ContainKey("border-bottom");
+        format.Properties["border-bottom"].Should().Be("single");
+        format.Properties.Should().ContainKey("border-color");
+        format.Properties["border-color"].Should().Be("#CCCCCC");
+        format.Properties.Should().ContainKey("border-width");
+        format.Properties["border-width"].Should().Be("1pt");
+    }
+
+    [Fact]
+    public void Parse_Format_AllFourBorderSides()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT border-top=single, border-bottom=double, border-left=thick, border-right=dashed\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties["border-top"].Should().Be("single");
+        format.Properties["border-bottom"].Should().Be("double");
+        format.Properties["border-left"].Should().Be("thick");
+        format.Properties["border-right"].Should().Be("dashed");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_BackgroundColorOnRun()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n  RUN \"code\" font-name=\"Consolas\" background-color=#F5F5F5\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(1);
+        op.Runs[0].Properties["font-name"].Should().Be("Consolas");
+        op.Runs[0].Properties["background-color"].Should().Be("#F5F5F5");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_SyntaxHighlightedCodePattern()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n" +
+                    "  RUN \"const \" color=#0000FF font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n" +
+                    "  RUN \"x\" color=#001080 font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n" +
+                    "  RUN \" = 42;\" font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(3);
+        op.Runs[0].Properties["color"].Should().Be("#0000FF");
+        op.Runs[0].Properties["background-color"].Should().Be("#F5F5F5");
+        op.Runs[1].Properties["color"].Should().Be("#001080");
+        op.Runs[2].Content.Text.Should().Be(" = 42;");
+    }
+
+    [Fact]
+    public void Parse_ThematicBreakPattern()
+    {
+        // Thematic break = empty paragraph with bottom border
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nINSERT AFTER \"\"\nFORMAT border-bottom=single, border-color=#CCCCCC, spacing-after=12pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks[0].Operations.Should().HaveCount(2);
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        var format = doc.OperationBlocks[0].Operations[1].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties["border-bottom"].Should().Be("single");
+        format.Properties["border-color"].Should().Be("#CCCCCC");
+        format.Properties["spacing-after"].Should().Be("12pt");
+    }
+
+    [Fact]
+    public void Parse_MarkdownDocumentConstructionPattern()
+    {
+        // End-to-end test of the pattern from spec §12.16
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\n" +
+                    "PROPERTY title=\"Getting Started\"\n\n" +
+                    "AT body/paragraph[1]\n" +
+                    "SET \"Heading\"\n" +
+                    "STYLE \"Heading1\"\n\n" +
+                    "AT body/paragraph[1]\n" +
+                    "INSERT AFTER \"\"\n" +
+                    "SET RUNS\n" +
+                    "  RUN \"Visit \"\n" +
+                    "  RUN \"our site\" href=\"https://example.com\" color=#0563C1 underline=single\n\n" +
+                    "AT body/paragraph[2]\n" +
+                    "INSERT AFTER \"\"\n" +
+                    "FORMAT border-bottom=single, border-color=#CCCCCC\n\n" +
+                    "AT body/paragraph[3]\n" +
+                    "INSERT LIST AFTER unordered\n" +
+                    "  ITEM \"First\"\n" +
+                    "  ITEM \"Second\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.PropertySettings.Should().Contain(p => p.Name == "title");
+        doc.OperationBlocks.Should().HaveCount(4);
+
+        // Block 1: SET + STYLE
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetOperation>();
+        doc.OperationBlocks[0].Operations[1].Should().BeOfType<StyleOperation>();
+
+        // Block 2: INSERT AFTER + SET RUNS
+        doc.OperationBlocks[1].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        doc.OperationBlocks[1].Operations[1].Should().BeOfType<SetRunsOperation>();
+
+        // Block 3: INSERT AFTER + FORMAT (thematic break)
+        doc.OperationBlocks[2].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        var fmt = doc.OperationBlocks[2].Operations[1].Should().BeOfType<FormatOperation>().Subject;
+        fmt.Properties.Should().ContainKey("border-bottom");
+
+        // Block 4: INSERT LIST
+        doc.OperationBlocks[3].Operations[0].Should().BeOfType<InsertListOperation>();
+    }
 }
