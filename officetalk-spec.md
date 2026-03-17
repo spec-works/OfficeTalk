@@ -1186,7 +1186,8 @@ Rules for content blocks:
 | `underline` | enum | Underline style: `single`, `double`, `dotted`, `dashed`, `wavy`, `none` |
 | `strikethrough` | boolean | Strikethrough |
 | `color` | color | Text color |
-| `highlight` | color | Text highlight color |
+| `highlight` | color | Text highlight color (limited palette: yellow, green, cyan, magenta, red, blue, darkBlue, darkCyan, darkGreen, darkMagenta, darkRed, darkYellow, darkGray, lightGray, black, white) |
+| `background-color` | color | Background shading color (arbitrary color). Distinct from `highlight`; uses document shading rather than marker-style highlighting. |
 | `superscript` | boolean | Superscript position |
 | `subscript` | boolean | Subscript position |
 | `small-caps` | boolean | Small capitals |
@@ -1208,6 +1209,12 @@ Rules for content blocks:
 | `keep-with-next` | boolean | Keep with next paragraph |
 | `page-break-before` | boolean | Page break before paragraph |
 | `outline-level` | number | Outline level (0-8) |
+| `border-top` | enum | Top border style: `single`, `double`, `thick`, `dashed`, `dotted`, `none` |
+| `border-bottom` | enum | Bottom border style (same values as `border-top`) |
+| `border-left` | enum | Left border style (same values as `border-top`) |
+| `border-right` | enum | Right border style (same values as `border-top`) |
+| `border-color` | color | Border color (applies to all borders specified in the same FORMAT) |
+| `border-width` | length | Border line width (applies to all borders specified in the same FORMAT) |
 
 ### 7.3. Table Properties
 
@@ -1786,6 +1793,93 @@ INSPECT sheet["Q1 Budget"]/D2
 INSPECT sheet["Q1 Budget"]/D2
   INCLUDE content
   CONTEXT 2
+```
+
+### 12.16. Word: Markdown-Style Document Construction
+
+This example demonstrates building a document from scratch using OfficeTalk,
+as a Markdown-to-Word compiler might emit. The target is a blank document
+containing a single empty paragraph at `body/paragraph[1]`.
+
+```
+OFFICETALK/1.0
+DOCTYPE word
+
+PROPERTY title="Getting Started Guide"
+PROPERTY author="Documentation Team"
+
+# -- Title heading --
+AT body/paragraph[1]
+SET "Getting Started"
+STYLE "Heading1"
+
+# -- Introductory paragraph with mixed formatting --
+AT body/paragraph[1]
+INSERT AFTER ""
+SET RUNS
+  RUN "Welcome to the project. See the "
+  RUN "quick start guide" href="https://example.com/start" color="#0563C1" underline=single
+  RUN " for setup instructions."
+
+# -- Code snippet with syntax highlighting --
+AT body/paragraph[2]
+INSERT AFTER ""
+SET RUNS
+  RUN "const " color="#0000FF" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN "server" color="#001080" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN " = " font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN "require" color="#795E26" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN "(" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN "\"express\"" color="#A31515" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+  RUN ");" font-name="Consolas" font-size=10pt background-color="#F5F5F5"
+
+# -- Thematic break (horizontal rule) --
+AT body/paragraph[3]
+INSERT AFTER ""
+FORMAT border-bottom=single, border-color="#CCCCCC", spacing-after=12pt
+
+# -- Bulleted list --
+AT body/paragraph[4]
+INSERT LIST AFTER unordered
+  ITEM "Install dependencies"
+  ITEM "Configure environment variables"
+  ITEM "Run the test suite"
+
+# -- Block quote using built-in style --
+AT body/paragraph[7]
+INSERT AFTER "Always test before deploying to production."
+STYLE "Quote"
+
+# -- Table with data --
+AT body/paragraph[8]
+INSERT TABLE AFTER rows=3, columns=2
+
+AT body/table[1]/row[1]
+SET CELLS "Command", "Description"
+
+AT body/table[1]/row[2]
+SET CELLS "npm install", "Install packages"
+
+AT body/table[1]/row[3]
+SET CELLS "npm test", "Run tests"
+
+# -- Header row formatting --
+AT body/table[1]/row[1]
+FORMAT bold=true, fill-color="#4472C4", color="#FFFFFF"
+
+# -- Inline code within a paragraph --
+AT body/paragraph[8]
+INSERT AFTER ""
+SET RUNS
+  RUN "Run "
+  RUN "npm start" font-name="Consolas" font-size=10pt background-color="#F0F0F0"
+  RUN " to launch the development server."
+
+# -- Image --
+AT body/paragraph[9]
+INSERT IMAGE AFTER "architecture.png"
+  alt="System architecture diagram"
+  width=5in
 ```
 
 ---
