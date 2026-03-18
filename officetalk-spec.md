@@ -1089,11 +1089,20 @@ supported:
 | `\\` | Literal backslash |
 | `\n` | Newline (U+000A) |
 | `\t` | Tab (U+0009) |
+| `\uXXXX` | Unicode code point (4 hex digits, BMP) |
+
+The `\uXXXX` escape accepts exactly four hexadecimal digits (case-insensitive) and
+produces the corresponding Unicode character. This is particularly useful for
+characters that are difficult to type or that may be corrupted by intermediate
+toolchains — em dashes (`\u2014`), smart quotes (`\u201C`, `\u201D`),
+non-breaking spaces (`\u00A0`), and similar typographic characters.
 
 ```
 "Hello, World!"
 "She said \"hello\" to them."
 "Line one\nLine two"
+"Q3 Revenue \u2014 Final"
+"\u201CThe third paragraph\u201D"
 ```
 
 ### 6.2. Numbers
@@ -1993,7 +2002,7 @@ cell-ref         = 1*ALPHA 1*DIGIT [ ":" 1*ALPHA 1*DIGIT ]
 
 ; --- Data Types ---
 quoted-string    = DQUOTE *( escaped-char / safe-char ) DQUOTE
-escaped-char     = "\" ( DQUOTE / "\" / "n" / "t" )
+escaped-char     = "\" ( DQUOTE / "\" / "n" / "t" / "u" 4HEXDIG )
 safe-char        = %x20-21 / %x23-5B / %x5D-7E / UTF8-tail
 number           = [ "-" ] 1*DIGIT [ "." 1*DIGIT ]
 boolean          = "true" / "false"

@@ -335,6 +335,24 @@ public class OfficeTalkLexer
                     case '\\': sb.Append('\\'); Advance(); Advance(); break;
                     case 'n': sb.Append('\n'); Advance(); Advance(); break;
                     case 't': sb.Append('\t'); Advance(); Advance(); break;
+                    case 'u':
+                        Advance(); // skip '\'
+                        Advance(); // skip 'u'
+                        if (_pos + 4 <= _source.Length &&
+                            IsHexDigit(_source[_pos]) && IsHexDigit(_source[_pos + 1]) &&
+                            IsHexDigit(_source[_pos + 2]) && IsHexDigit(_source[_pos + 3]))
+                        {
+                            var hex = _source.Substring(_pos, 4);
+                            sb.Append((char)Convert.ToInt32(hex, 16));
+                            Advance(); Advance(); Advance(); Advance();
+                        }
+                        else
+                        {
+                            // Invalid escape — emit literal \u
+                            sb.Append('\\');
+                            sb.Append('u');
+                        }
+                        break;
                     default: sb.Append(_source[_pos]); Advance(); break;
                 }
             }

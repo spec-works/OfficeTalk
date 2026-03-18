@@ -71,6 +71,66 @@ public class LexerTests
     }
 
     [Fact]
+    public void Tokenize_StringWithUnicodeEscape_ProducesUnicodeCharacter()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"Revenue \\u2014 Final\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("Revenue \u2014 Final");
+    }
+
+    [Fact]
+    public void Tokenize_StringWithMultipleUnicodeEscapes_ProducesAllCharacters()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"\\u201CHello\\u201D\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("\u201CHello\u201D");
+    }
+
+    [Fact]
+    public void Tokenize_StringWithUppercaseHexUnicodeEscape_ProducesCharacter()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"\\u00A0\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("\u00A0");
+    }
+
+    [Fact]
+    public void Tokenize_StringWithInvalidUnicodeEscape_EmitsLiteralBackslashU()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"\\uZZZZ\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("\\uZZZZ");
+    }
+
+    [Fact]
+    public void Tokenize_StringWithTruncatedUnicodeEscape_EmitsLiteralBackslashU()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"\\u20\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("\\u20");
+    }
+
+    [Fact]
+    public void Tokenize_StringWithMixedEscapes_ProcessesAll()
+    {
+        var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET \"Tab:\\there \\u2014 \\\"quoted\\\"\\n\"\n");
+        var tokens = lexer.Tokenize();
+
+        var stringToken = tokens.First(t => t.Type == TokenType.String);
+        stringToken.Value.Should().Be("Tab:\there \u2014 \"quoted\"\n");
+    }
+
+    [Fact]
     public void Tokenize_Address_ProducesCorrectSegments()
     {
         var lexer = new OfficeTalkLexer("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[3]\nDELETE\n");
