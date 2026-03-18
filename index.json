@@ -1,0 +1,302 @@
+{
+  "api/OfficeTalk.Ast.AddSheetOperation.html": {
+    "href": "api/OfficeTalk.Ast.AddSheetOperation.html",
+    "title": "Class AddSheetOperation | OfficeTalk Documentation",
+    "summary": "Class AddSheetOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll ADD SHEET \"name\" public class AddSheetOperation : Operation Inheritance object Operation AddSheetOperation Inherited Members Operation.Line Properties Name public string Name { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.Address.html": {
+    "href": "api/OfficeTalk.Ast.Address.html",
+    "title": "Class Address | OfficeTalk Documentation",
+    "summary": "Class Address Namespace OfficeTalk.Ast Assembly OfficeTalk.dll An address composed of path segments separated by slashes. Example: body/heading[level=2, text=\"Methods\"] public class Address Inheritance object Address Properties RawText The raw text of the address for error reporting. public string RawText { get; set; } Property Value string Segments The segments that make up this address path. public List<AddressSegment> Segments { get; set; } Property Value List<AddressSegment> Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.AddressSegment.html": {
+    "href": "api/OfficeTalk.Ast.AddressSegment.html",
+    "title": "Class AddressSegment | OfficeTalk Documentation",
+    "summary": "Class AddressSegment Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A single segment in an address path, with optional predicates. Example: heading[level=2, text=\"Methods\"] public class AddressSegment Inheritance object AddressSegment Properties Identifier The segment identifier (e.g., \"body\", \"paragraph\", \"heading\", \"table\"). public string Identifier { get; set; } Property Value string Predicates Predicates that filter elements at this segment. public List<Predicate> Predicates { get; set; } Property Value List<Predicate> Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.AppendOperation.html": {
+    "href": "api/OfficeTalk.Ast.AppendOperation.html",
+    "title": "Class AppendOperation | OfficeTalk Documentation",
+    "summary": "Class AppendOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll APPEND content to end of element. public class AppendOperation : Operation Inheritance object Operation AppendOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.BareStringPredicate.html": {
+    "href": "api/OfficeTalk.Ast.BareStringPredicate.html",
+    "title": "Class BareStringPredicate | OfficeTalk Documentation",
+    "summary": "Class BareStringPredicate Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A bare string predicate, used as a shorthand name (e.g., sheet[\"Revenue\"]). public class BareStringPredicate : Predicate Inheritance object Predicate BareStringPredicate Constructors BareStringPredicate() public BareStringPredicate() BareStringPredicate(string) public BareStringPredicate(string value) Parameters value string Properties Value public string Value { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.CellRefPredicate.html": {
+    "href": "api/OfficeTalk.Ast.CellRefPredicate.html",
+    "title": "Class CellRefPredicate | OfficeTalk Documentation",
+    "summary": "Class CellRefPredicate Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A cell reference predicate for Excel addresses (e.g., A1, A1:D10). public class CellRefPredicate : Predicate Inheritance object Predicate CellRefPredicate Constructors CellRefPredicate() public CellRefPredicate() CellRefPredicate(string) public CellRefPredicate(string cellRef) Parameters cellRef string Properties CellRef public string CellRef { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.ColorValue.html": {
+    "href": "api/OfficeTalk.Ast.ColorValue.html",
+    "title": "Class ColorValue | OfficeTalk Documentation",
+    "summary": "Class ColorValue Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Represents a color value (hex or named). public class ColorValue Inheritance object ColorValue Constructors ColorValue() public ColorValue() ColorValue(string) public ColorValue(string raw) Parameters raw string Properties A public byte? A { get; set; } Property Value byte? B public byte B { get; set; } Property Value byte G public byte G { get; set; } Property Value byte IsNamed public bool IsNamed { get; set; } Property Value bool R public byte R { get; set; } Property Value byte Raw public string Raw { get; set; } Property Value string Methods ToHex() public string ToHex() Returns string ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.CommentOperation.html": {
+    "href": "api/OfficeTalk.Ast.CommentOperation.html",
+    "title": "Class CommentOperation | OfficeTalk Documentation",
+    "summary": "Class CommentOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll COMMENT \"text\" — add a comment anchored to the addressed element. public class CommentOperation : Operation Inheritance object Operation CommentOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.ContentValue.html": {
+    "href": "api/OfficeTalk.Ast.ContentValue.html",
+    "title": "Class ContentValue | OfficeTalk Documentation",
+    "summary": "Class ContentValue Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Represents content that can be either an inline string or a content block. public class ContentValue Inheritance object ContentValue Constructors ContentValue() public ContentValue() ContentValue(string, bool) public ContentValue(string text, bool isContentBlock = false) Parameters text string isContentBlock bool Properties IsContentBlock public bool IsContentBlock { get; set; } Property Value bool Text public string Text { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.DeleteOperation.html": {
+    "href": "api/OfficeTalk.Ast.DeleteOperation.html",
+    "title": "Class DeleteOperation | OfficeTalk Documentation",
+    "summary": "Class DeleteOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll DELETE [ROW|COLUMN|SLIDE|SHEET] public class DeleteOperation : Operation Inheritance object Operation DeleteOperation Inherited Members Operation.Line Properties Target public DeleteTarget Target { get; set; } Property Value DeleteTarget"
+  },
+  "api/OfficeTalk.Ast.DeleteTarget.html": {
+    "href": "api/OfficeTalk.Ast.DeleteTarget.html",
+    "title": "Enum DeleteTarget | OfficeTalk Documentation",
+    "summary": "Enum DeleteTarget Namespace OfficeTalk.Ast Assembly OfficeTalk.dll The target of a DELETE operation. public enum DeleteTarget Fields Column = 2 Element = 0 Row = 1 Sheet = 4 Slide = 3"
+  },
+  "api/OfficeTalk.Ast.DocType.html": {
+    "href": "api/OfficeTalk.Ast.DocType.html",
+    "title": "Enum DocType | OfficeTalk Documentation",
+    "summary": "Enum DocType Namespace OfficeTalk.Ast Assembly OfficeTalk.dll The target document type for an OfficeTalk document. public enum DocType Fields Excel = 1 PowerPoint = 2 Word = 0"
+  },
+  "api/OfficeTalk.Ast.DuplicateSlideOperation.html": {
+    "href": "api/OfficeTalk.Ast.DuplicateSlideOperation.html",
+    "title": "Class DuplicateSlideOperation | OfficeTalk Documentation",
+    "summary": "Class DuplicateSlideOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll DUPLICATE SLIDE public class DuplicateSlideOperation : Operation Inheritance object Operation DuplicateSlideOperation Inherited Members Operation.Line"
+  },
+  "api/OfficeTalk.Ast.FormatOperation.html": {
+    "href": "api/OfficeTalk.Ast.FormatOperation.html",
+    "title": "Class FormatOperation | OfficeTalk Documentation",
+    "summary": "Class FormatOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll FORMAT key=value, key=value — apply formatting properties. public class FormatOperation : Operation Inheritance object Operation FormatOperation Inherited Members Operation.Line Properties Properties public Dictionary<string, object> Properties { get; set; } Property Value Dictionary<string, object>"
+  },
+  "api/OfficeTalk.Ast.IncludeLayer.html": {
+    "href": "api/OfficeTalk.Ast.IncludeLayer.html",
+    "title": "Enum IncludeLayer | OfficeTalk Documentation",
+    "summary": "Enum IncludeLayer Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Detail layers that can be requested in an INSPECT operation. public enum IncludeLayer Fields Content = 0 Textual content of the element. Properties = 1 Formatting and metadata properties."
+  },
+  "api/OfficeTalk.Ast.InsertAfterOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertAfterOperation.html",
+    "title": "Class InsertAfterOperation | OfficeTalk Documentation",
+    "summary": "Class InsertAfterOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT AFTER content public class InsertAfterOperation : Operation Inheritance object Operation InsertAfterOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.InsertBeforeOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertBeforeOperation.html",
+    "title": "Class InsertBeforeOperation | OfficeTalk Documentation",
+    "summary": "Class InsertBeforeOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT BEFORE content public class InsertBeforeOperation : Operation Inheritance object Operation InsertBeforeOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.InsertColumnOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertColumnOperation.html",
+    "title": "Class InsertColumnOperation | OfficeTalk Documentation",
+    "summary": "Class InsertColumnOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT COLUMN BEFORE/AFTER public class InsertColumnOperation : Operation Inheritance object Operation InsertColumnOperation Inherited Members Operation.Line Properties Position public InsertPosition Position { get; set; } Property Value InsertPosition"
+  },
+  "api/OfficeTalk.Ast.InsertImageOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertImageOperation.html",
+    "title": "Class InsertImageOperation | OfficeTalk Documentation",
+    "summary": "Class InsertImageOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT IMAGE BEFORE/AFTER \"source\" — insert an image. public class InsertImageOperation : Operation Inheritance object Operation InsertImageOperation Inherited Members Operation.Line Properties Position public InsertPosition Position { get; set; } Property Value InsertPosition Properties public Dictionary<string, object> Properties { get; set; } Property Value Dictionary<string, object> Source public string Source { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.InsertListOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertListOperation.html",
+    "title": "Class InsertListOperation | OfficeTalk Documentation",
+    "summary": "Class InsertListOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT LIST BEFORE/AFTER [ordered|unordered] — create a list. public class InsertListOperation : Operation Inheritance object Operation InsertListOperation Inherited Members Operation.Line Properties Items public List<ListItem> Items { get; set; } Property Value List<ListItem> ListType public ListType ListType { get; set; } Property Value ListType Position public InsertPosition Position { get; set; } Property Value InsertPosition"
+  },
+  "api/OfficeTalk.Ast.InsertPosition.html": {
+    "href": "api/OfficeTalk.Ast.InsertPosition.html",
+    "title": "Enum InsertPosition | OfficeTalk Documentation",
+    "summary": "Enum InsertPosition Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Position for INSERT operations. public enum InsertPosition Fields After = 1 Before = 0"
+  },
+  "api/OfficeTalk.Ast.InsertRowOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertRowOperation.html",
+    "title": "Class InsertRowOperation | OfficeTalk Documentation",
+    "summary": "Class InsertRowOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT ROW BEFORE/AFTER public class InsertRowOperation : Operation Inheritance object Operation InsertRowOperation Inherited Members Operation.Line Properties Position public InsertPosition Position { get; set; } Property Value InsertPosition"
+  },
+  "api/OfficeTalk.Ast.InsertSlideOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertSlideOperation.html",
+    "title": "Class InsertSlideOperation | OfficeTalk Documentation",
+    "summary": "Class InsertSlideOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT SLIDE BEFORE/AFTER public class InsertSlideOperation : Operation Inheritance object Operation InsertSlideOperation Inherited Members Operation.Line Properties Position public InsertPosition Position { get; set; } Property Value InsertPosition"
+  },
+  "api/OfficeTalk.Ast.InsertTableOperation.html": {
+    "href": "api/OfficeTalk.Ast.InsertTableOperation.html",
+    "title": "Class InsertTableOperation | OfficeTalk Documentation",
+    "summary": "Class InsertTableOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll INSERT TABLE BEFORE/AFTER rows=N, columns=M — create a new table. public class InsertTableOperation : Operation Inheritance object Operation InsertTableOperation Inherited Members Operation.Line Properties Columns public int Columns { get; set; } Property Value int Position public InsertPosition Position { get; set; } Property Value InsertPosition Properties public Dictionary<string, object> Properties { get; set; } Property Value Dictionary<string, object> Rows public int Rows { get; set; } Property Value int"
+  },
+  "api/OfficeTalk.Ast.InspectBlock.html": {
+    "href": "api/OfficeTalk.Ast.InspectBlock.html",
+    "title": "Class InspectBlock | OfficeTalk Documentation",
+    "summary": "Class InspectBlock Namespace OfficeTalk.Ast Assembly OfficeTalk.dll An inspect block: an INSPECT address line followed by optional modifiers. public class InspectBlock Inheritance object InspectBlock Properties Address The target address to inspect. public Address Address { get; set; } Property Value Address Context Number of sibling elements before and after to include (default 0). public int Context { get; set; } Property Value int Depth Number of child element levels to include (default 0). public int Depth { get; set; } Property Value int Include Which detail layers to include (content, properties, or both). public List<IncludeLayer> Include { get; set; } Property Value List<IncludeLayer> Line The source line number where this block begins. public int Line { get; set; } Property Value int"
+  },
+  "api/OfficeTalk.Ast.KeyValuePredicate.html": {
+    "href": "api/OfficeTalk.Ast.KeyValuePredicate.html",
+    "title": "Class KeyValuePredicate | OfficeTalk Documentation",
+    "summary": "Class KeyValuePredicate Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A key-value predicate with a comparison operator (e.g., level=2, text~=\"pattern\"). public class KeyValuePredicate : Predicate Inheritance object Predicate KeyValuePredicate Constructors KeyValuePredicate() public KeyValuePredicate() KeyValuePredicate(string, PredicateOperator, string) public KeyValuePredicate(string key, PredicateOperator op, string value) Parameters key string op PredicateOperator value string Properties Key public string Key { get; set; } Property Value string Operator public PredicateOperator Operator { get; set; } Property Value PredicateOperator Value public string Value { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.LengthUnit.html": {
+    "href": "api/OfficeTalk.Ast.LengthUnit.html",
+    "title": "Enum LengthUnit | OfficeTalk Documentation",
+    "summary": "Enum LengthUnit Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Length unit types supported by OfficeTalk. public enum LengthUnit Fields Centimeters = 2 Emu = 4 Inches = 1 Percentage = 3 Points = 0"
+  },
+  "api/OfficeTalk.Ast.LengthValue.html": {
+    "href": "api/OfficeTalk.Ast.LengthValue.html",
+    "title": "Class LengthValue | OfficeTalk Documentation",
+    "summary": "Class LengthValue Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Represents a length value with a unit. public class LengthValue Inheritance object LengthValue Constructors LengthValue() public LengthValue() LengthValue(double, LengthUnit) public LengthValue(double amount, LengthUnit unit) Parameters amount double unit LengthUnit Properties Amount public double Amount { get; set; } Property Value double Raw public string Raw { get; set; } Property Value string Unit public LengthUnit Unit { get; set; } Property Value LengthUnit Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.LinkOperation.html": {
+    "href": "api/OfficeTalk.Ast.LinkOperation.html",
+    "title": "Class LinkOperation | OfficeTalk Documentation",
+    "summary": "Class LinkOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll LINK \"url\" — create a hyperlink on the addressed element. public class LinkOperation : Operation Inheritance object Operation LinkOperation Inherited Members Operation.Line Properties Url public string Url { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.ListItem.html": {
+    "href": "api/OfficeTalk.Ast.ListItem.html",
+    "title": "Class ListItem | OfficeTalk Documentation",
+    "summary": "Class ListItem Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A single item in an INSERT LIST operation. public class ListItem Inheritance object ListItem Properties Content public ContentValue Content { get; set; } Property Value ContentValue IsNested public bool IsNested { get; set; } Property Value bool"
+  },
+  "api/OfficeTalk.Ast.ListType.html": {
+    "href": "api/OfficeTalk.Ast.ListType.html",
+    "title": "Enum ListType | OfficeTalk Documentation",
+    "summary": "Enum ListType Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Type of list for INSERT LIST operations. public enum ListType Fields Ordered = 0 Unordered = 1"
+  },
+  "api/OfficeTalk.Ast.MergeCellsOperation.html": {
+    "href": "api/OfficeTalk.Ast.MergeCellsOperation.html",
+    "title": "Class MergeCellsOperation | OfficeTalk Documentation",
+    "summary": "Class MergeCellsOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll MERGE CELLS TO address public class MergeCellsOperation : Operation Inheritance object Operation MergeCellsOperation Inherited Members Operation.Line Properties TargetAddress public Address TargetAddress { get; set; } Property Value Address"
+  },
+  "api/OfficeTalk.Ast.OfficeTalkDocument.html": {
+    "href": "api/OfficeTalk.Ast.OfficeTalkDocument.html",
+    "title": "Class OfficeTalkDocument | OfficeTalk Documentation",
+    "summary": "Class OfficeTalkDocument Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Root AST node representing a complete OfficeTalk document. public class OfficeTalkDocument Inheritance object OfficeTalkDocument Properties DocType The target document type. public DocType DocType { get; set; } Property Value DocType Errors Parse errors collected during parsing. public List<ParseError> Errors { get; set; } Property Value List<ParseError> InspectBlocks Inspect blocks (INSPECT address + modifiers). public List<InspectBlock> InspectBlocks { get; set; } Property Value List<InspectBlock> OperationBlocks Operation blocks (AT address + operations). public List<OperationBlock> OperationBlocks { get; set; } Property Value List<OperationBlock> PropertySettings Document-level property settings. public List<PropertySetting> PropertySettings { get; set; } Property Value List<PropertySetting> Version The OfficeTalk version (e.g., \"1.0\"). public string Version { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.Operation.html": {
+    "href": "api/OfficeTalk.Ast.Operation.html",
+    "title": "Class Operation | OfficeTalk Documentation",
+    "summary": "Class Operation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Base class for all OfficeTalk operations. public abstract class Operation Inheritance object Operation Derived AddSheetOperation AppendOperation CommentOperation DeleteOperation DuplicateSlideOperation FormatOperation InsertAfterOperation InsertBeforeOperation InsertColumnOperation InsertImageOperation InsertListOperation InsertRowOperation InsertSlideOperation InsertTableOperation LinkOperation MergeCellsOperation PrependOperation RenameSheetOperation ReplaceOperation SetCellsOperation SetOperation SetRunsOperation StyleOperation Properties Line Source line number. public int Line { get; set; } Property Value int"
+  },
+  "api/OfficeTalk.Ast.OperationBlock.html": {
+    "href": "api/OfficeTalk.Ast.OperationBlock.html",
+    "title": "Class OperationBlock | OfficeTalk Documentation",
+    "summary": "Class OperationBlock Namespace OfficeTalk.Ast Assembly OfficeTalk.dll An operation block: an address line (AT [EACH] address) followed by one or more operations. public class OperationBlock Inheritance object OperationBlock Properties Address The target address for this block. public Address Address { get; set; } Property Value Address IsEach Whether this is a bulk operation (AT EACH). public bool IsEach { get; set; } Property Value bool Line The source line number where this block begins. public int Line { get; set; } Property Value int Operations The operations to apply at the addressed element(s). public List<Operation> Operations { get; set; } Property Value List<Operation>"
+  },
+  "api/OfficeTalk.Ast.ParseError.html": {
+    "href": "api/OfficeTalk.Ast.ParseError.html",
+    "title": "Class ParseError | OfficeTalk Documentation",
+    "summary": "Class ParseError Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A parse error with location information. public class ParseError Inheritance object ParseError Constructors ParseError() public ParseError() ParseError(string, int, int) public ParseError(string message, int line, int column) Parameters message string line int column int Properties Column public int Column { get; set; } Property Value int Line public int Line { get; set; } Property Value int Message public string Message { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.PositionalPredicate.html": {
+    "href": "api/OfficeTalk.Ast.PositionalPredicate.html",
+    "title": "Class PositionalPredicate | OfficeTalk Documentation",
+    "summary": "Class PositionalPredicate Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A positional predicate using 1-based indexing (e.g., paragraph[3]). public class PositionalPredicate : Predicate Inheritance object Predicate PositionalPredicate Constructors PositionalPredicate() public PositionalPredicate() PositionalPredicate(int) public PositionalPredicate(int position) Parameters position int Properties Position public int Position { get; set; } Property Value int Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Ast.Predicate.html": {
+    "href": "api/OfficeTalk.Ast.Predicate.html",
+    "title": "Class Predicate | OfficeTalk Documentation",
+    "summary": "Class Predicate Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A predicate used to filter elements within an address segment. public abstract class Predicate Inheritance object Predicate Derived BareStringPredicate CellRefPredicate KeyValuePredicate PositionalPredicate"
+  },
+  "api/OfficeTalk.Ast.PredicateOperator.html": {
+    "href": "api/OfficeTalk.Ast.PredicateOperator.html",
+    "title": "Enum PredicateOperator | OfficeTalk Documentation",
+    "summary": "Enum PredicateOperator Namespace OfficeTalk.Ast Assembly OfficeTalk.dll Comparison operators used in key-value predicates. public enum PredicateOperator Fields AsteriskEquals = 4 Contains (*=) CaretEquals = 2 Starts with (^=) DollarEquals = 3 Ends with ($=) Equals = 0 Exact match (=) TildeEquals = 1 Regex/I-Regexp match (~=)"
+  },
+  "api/OfficeTalk.Ast.PrependOperation.html": {
+    "href": "api/OfficeTalk.Ast.PrependOperation.html",
+    "title": "Class PrependOperation | OfficeTalk Documentation",
+    "summary": "Class PrependOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll PREPEND content to beginning of element. public class PrependOperation : Operation Inheritance object Operation PrependOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.PropertySetting.html": {
+    "href": "api/OfficeTalk.Ast.PropertySetting.html",
+    "title": "Class PropertySetting | OfficeTalk Documentation",
+    "summary": "Class PropertySetting Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A document-level property setting (e.g., PROPERTY title=\"...\"). public class PropertySetting Inheritance object PropertySetting Properties Line public int Line { get; set; } Property Value int Name public string Name { get; set; } Property Value string Value public string Value { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.RenameSheetOperation.html": {
+    "href": "api/OfficeTalk.Ast.RenameSheetOperation.html",
+    "title": "Class RenameSheetOperation | OfficeTalk Documentation",
+    "summary": "Class RenameSheetOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll RENAME SHEET \"newName\" public class RenameSheetOperation : Operation Inheritance object Operation RenameSheetOperation Inherited Members Operation.Line Properties NewName public string NewName { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.ReplaceOperation.html": {
+    "href": "api/OfficeTalk.Ast.ReplaceOperation.html",
+    "title": "Class ReplaceOperation | OfficeTalk Documentation",
+    "summary": "Class ReplaceOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll REPLACE [ALL] \"search\" WITH \"replacement\" public class ReplaceOperation : Operation Inheritance object Operation ReplaceOperation Inherited Members Operation.Line Properties IsAll public bool IsAll { get; set; } Property Value bool Replacement public string Replacement { get; set; } Property Value string Search public string Search { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.RunDefinition.html": {
+    "href": "api/OfficeTalk.Ast.RunDefinition.html",
+    "title": "Class RunDefinition | OfficeTalk Documentation",
+    "summary": "Class RunDefinition Namespace OfficeTalk.Ast Assembly OfficeTalk.dll A single run in a SET RUNS operation. public class RunDefinition Inheritance object RunDefinition Properties Content public ContentValue Content { get; set; } Property Value ContentValue Properties public Dictionary<string, object> Properties { get; set; } Property Value Dictionary<string, object>"
+  },
+  "api/OfficeTalk.Ast.SetCellsOperation.html": {
+    "href": "api/OfficeTalk.Ast.SetCellsOperation.html",
+    "title": "Class SetCellsOperation | OfficeTalk Documentation",
+    "summary": "Class SetCellsOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll SET CELLS \"val1\", \"val2\", ... public class SetCellsOperation : Operation Inheritance object Operation SetCellsOperation Inherited Members Operation.Line Properties Values public List<string> Values { get; set; } Property Value List<string>"
+  },
+  "api/OfficeTalk.Ast.SetOperation.html": {
+    "href": "api/OfficeTalk.Ast.SetOperation.html",
+    "title": "Class SetOperation | OfficeTalk Documentation",
+    "summary": "Class SetOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll SET content — replace element content with new text or content block. public class SetOperation : Operation Inheritance object Operation SetOperation Inherited Members Operation.Line Properties Content public ContentValue Content { get; set; } Property Value ContentValue"
+  },
+  "api/OfficeTalk.Ast.SetRunsOperation.html": {
+    "href": "api/OfficeTalk.Ast.SetRunsOperation.html",
+    "title": "Class SetRunsOperation | OfficeTalk Documentation",
+    "summary": "Class SetRunsOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll SET RUNS — replace element content with individually formatted runs. public class SetRunsOperation : Operation Inheritance object Operation SetRunsOperation Inherited Members Operation.Line Properties Runs public List<RunDefinition> Runs { get; set; } Property Value List<RunDefinition>"
+  },
+  "api/OfficeTalk.Ast.StyleOperation.html": {
+    "href": "api/OfficeTalk.Ast.StyleOperation.html",
+    "title": "Class StyleOperation | OfficeTalk Documentation",
+    "summary": "Class StyleOperation Namespace OfficeTalk.Ast Assembly OfficeTalk.dll STYLE \"styleName\" — apply a named style. public class StyleOperation : Operation Inheritance object Operation StyleOperation Inherited Members Operation.Line Properties StyleName public string StyleName { get; set; } Property Value string"
+  },
+  "api/OfficeTalk.Ast.html": {
+    "href": "api/OfficeTalk.Ast.html",
+    "title": "Namespace OfficeTalk.Ast | OfficeTalk Documentation",
+    "summary": "Namespace OfficeTalk.Ast Classes AddSheetOperation ADD SHEET \"name\" Address An address composed of path segments separated by slashes. Example: body/heading[level=2, text=\"Methods\"] AddressSegment A single segment in an address path, with optional predicates. Example: heading[level=2, text=\"Methods\"] AppendOperation APPEND content to end of element. BareStringPredicate A bare string predicate, used as a shorthand name (e.g., sheet[\"Revenue\"]). CellRefPredicate A cell reference predicate for Excel addresses (e.g., A1, A1:D10). ColorValue Represents a color value (hex or named). CommentOperation COMMENT \"text\" — add a comment anchored to the addressed element. ContentValue Represents content that can be either an inline string or a content block. DeleteOperation DELETE [ROW|COLUMN|SLIDE|SHEET] DuplicateSlideOperation DUPLICATE SLIDE FormatOperation FORMAT key=value, key=value — apply formatting properties. InsertAfterOperation INSERT AFTER content InsertBeforeOperation INSERT BEFORE content InsertColumnOperation INSERT COLUMN BEFORE/AFTER InsertImageOperation INSERT IMAGE BEFORE/AFTER \"source\" — insert an image. InsertListOperation INSERT LIST BEFORE/AFTER [ordered|unordered] — create a list. InsertRowOperation INSERT ROW BEFORE/AFTER InsertSlideOperation INSERT SLIDE BEFORE/AFTER InsertTableOperation INSERT TABLE BEFORE/AFTER rows=N, columns=M — create a new table. InspectBlock An inspect block: an INSPECT address line followed by optional modifiers. KeyValuePredicate A key-value predicate with a comparison operator (e.g., level=2, text~=\"pattern\"). LengthValue Represents a length value with a unit. LinkOperation LINK \"url\" — create a hyperlink on the addressed element. ListItem A single item in an INSERT LIST operation. MergeCellsOperation MERGE CELLS TO address OfficeTalkDocument Root AST node representing a complete OfficeTalk document. Operation Base class for all OfficeTalk operations. OperationBlock An operation block: an address line (AT [EACH] address) followed by one or more operations. ParseError A parse error with location information. PositionalPredicate A positional predicate using 1-based indexing (e.g., paragraph[3]). Predicate A predicate used to filter elements within an address segment. PrependOperation PREPEND content to beginning of element. PropertySetting A document-level property setting (e.g., PROPERTY title=\"...\"). RenameSheetOperation RENAME SHEET \"newName\" ReplaceOperation REPLACE [ALL] \"search\" WITH \"replacement\" RunDefinition A single run in a SET RUNS operation. SetCellsOperation SET CELLS \"val1\", \"val2\", ... SetOperation SET content — replace element content with new text or content block. SetRunsOperation SET RUNS — replace element content with individually formatted runs. StyleOperation STYLE \"styleName\" — apply a named style. Enums DeleteTarget The target of a DELETE operation. DocType The target document type for an OfficeTalk document. IncludeLayer Detail layers that can be requested in an INSPECT operation. InsertPosition Position for INSERT operations. LengthUnit Length unit types supported by OfficeTalk. ListType Type of list for INSERT LIST operations. PredicateOperator Comparison operators used in key-value predicates."
+  },
+  "api/OfficeTalk.Parsing.OfficeTalkLexer.html": {
+    "href": "api/OfficeTalk.Parsing.OfficeTalkLexer.html",
+    "title": "Class OfficeTalkLexer | OfficeTalk Documentation",
+    "summary": "Class OfficeTalkLexer Namespace OfficeTalk.Parsing Assembly OfficeTalk.dll Line-oriented lexer for the OfficeTalk grammar. Tokenizes input text into a sequence of tokens for the parser. public class OfficeTalkLexer Inheritance object OfficeTalkLexer Constructors OfficeTalkLexer(string) public OfficeTalkLexer(string source) Parameters source string Methods Tokenize() Tokenize the entire source and return all tokens. public List<Token> Tokenize() Returns List<Token>"
+  },
+  "api/OfficeTalk.Parsing.OfficeTalkParser.html": {
+    "href": "api/OfficeTalk.Parsing.OfficeTalkParser.html",
+    "title": "Class OfficeTalkParser | OfficeTalk Documentation",
+    "summary": "Class OfficeTalkParser Namespace OfficeTalk.Parsing Assembly OfficeTalk.dll Parses a token stream into an OfficeTalk AST. Supports error recovery — collects errors and continues parsing when possible. public class OfficeTalkParser Inheritance object OfficeTalkParser Constructors OfficeTalkParser(List<Token>) public OfficeTalkParser(List<Token> tokens) Parameters tokens List<Token> Methods Parse() Parse the token stream into an OfficeTalkDocument AST. public OfficeTalkDocument Parse() Returns OfficeTalkDocument"
+  },
+  "api/OfficeTalk.Parsing.Token.html": {
+    "href": "api/OfficeTalk.Parsing.Token.html",
+    "title": "Class Token | OfficeTalk Documentation",
+    "summary": "Class Token Namespace OfficeTalk.Parsing Assembly OfficeTalk.dll Represents a single token produced by the OfficeTalk lexer. public class Token Inheritance object Token Constructors Token() public Token() Token(TokenType, string, int, int) public Token(TokenType type, string value, int line, int column) Parameters type TokenType value string line int column int Properties Column public int Column { get; set; } Property Value int Line public int Line { get; set; } Property Value int Type public TokenType Type { get; set; } Property Value TokenType Value public string Value { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Parsing.TokenType.html": {
+    "href": "api/OfficeTalk.Parsing.TokenType.html",
+    "title": "Enum TokenType | OfficeTalk Documentation",
+    "summary": "Enum TokenType Namespace OfficeTalk.Parsing Assembly OfficeTalk.dll All token types in the OfficeTalk grammar. public enum TokenType Fields ADD = 24 AFTER = 10 ALL = 7 APPEND = 12 AT = 2 AsteriskEquals = 57 BEFORE = 9 Boolean = 45 CELLS = 18 COLUMN = 21 COMMENT_KW = 27 CONTEXT = 39 CaretEquals = 55 Color = 46 Comma = 52 Comment = 61 ContentBlock = 60 ContentBlockEnd = 59 ContentBlockStart = 58 DELETE = 11 DEPTH = 37 DUPLICATE = 26 DocTypeKeyword = 1 DollarEquals = 56 EACH = 3 EOF = 63 Equals = 53 Excel = 41 FORMAT = 14 IMAGE = 29 INCLUDE = 38 INSERT = 8 INSPECT = 36 ITEM = 32 Identifier = 48 LINK = 28 LIST = 31 LeftBracket = 50 Length = 47 MERGE = 17 NESTED = 35 NewLine = 62 Number = 44 PREPEND = 13 PROPERTY = 16 PowerPoint = 42 RENAME = 25 REPLACE = 5 ROW = 20 RUN = 34 RUNS = 33 RightBracket = 51 SET = 4 SHEET = 23 SLIDE = 22 STYLE = 15 Slash = 49 String = 43 TABLE = 30 TO = 19 TildeEquals = 54 Version = 0 WITH = 6 Word = 40"
+  },
+  "api/OfficeTalk.Parsing.html": {
+    "href": "api/OfficeTalk.Parsing.html",
+    "title": "Namespace OfficeTalk.Parsing | OfficeTalk Documentation",
+    "summary": "Namespace OfficeTalk.Parsing Classes OfficeTalkLexer Line-oriented lexer for the OfficeTalk grammar. Tokenizes input text into a sequence of tokens for the parser. OfficeTalkParser Parses a token stream into an OfficeTalk AST. Supports error recovery — collects errors and continues parsing when possible. Token Represents a single token produced by the OfficeTalk lexer. Enums TokenType All token types in the OfficeTalk grammar."
+  },
+  "api/OfficeTalk.Validation.SyntacticValidator.html": {
+    "href": "api/OfficeTalk.Validation.SyntacticValidator.html",
+    "title": "Class SyntacticValidator | OfficeTalk Documentation",
+    "summary": "Class SyntacticValidator Namespace OfficeTalk.Validation Assembly OfficeTalk.dll Validates the syntactic structure of a parsed OfficeTalk AST. Checks for required fields, valid operation combinations, and structural correctness. public class SyntacticValidator Inheritance object SyntacticValidator Methods Validate(OfficeTalkDocument) Validate the AST structure. public ValidationResult Validate(OfficeTalkDocument document) Parameters document OfficeTalkDocument Returns ValidationResult"
+  },
+  "api/OfficeTalk.Validation.ValidationCategory.html": {
+    "href": "api/OfficeTalk.Validation.ValidationCategory.html",
+    "title": "Enum ValidationCategory | OfficeTalk Documentation",
+    "summary": "Enum ValidationCategory Namespace OfficeTalk.Validation Assembly OfficeTalk.dll Validation error/warning categories from the OfficeTalk specification. public enum ValidationCategory Fields AddressAmbiguous = 2 Address matches multiple elements when single expected. AddressNotFound = 1 Address matches nothing in the target document. Conflict = 7 Conflicting operations on the same element. Deprecated = 11 Use of deprecated syntax. InvalidOperation = 3 Operation not applicable to the target element type. InvalidValue = 4 Property value has wrong type or is out of range. MissingStyle = 5 Referenced style does not exist in the target document. MixedOperations = 12 Document mixes INSPECT and write operations. RedundantOp = 10 Operation has no effect. SearchNotFound = 6 REPLACE search text not found in target content. Structural = 8 Invalid structural operation. StyleOverride = 9 FORMAT overrides STYLE in the same block. Syntax = 0 Grammar violation."
+  },
+  "api/OfficeTalk.Validation.ValidationDiagnostic.html": {
+    "href": "api/OfficeTalk.Validation.ValidationDiagnostic.html",
+    "title": "Class ValidationDiagnostic | OfficeTalk Documentation",
+    "summary": "Class ValidationDiagnostic Namespace OfficeTalk.Validation Assembly OfficeTalk.dll A single validation diagnostic (error or warning). public class ValidationDiagnostic Inheritance object ValidationDiagnostic Constructors ValidationDiagnostic() public ValidationDiagnostic() ValidationDiagnostic(ValidationCategory, string, int?, int?) public ValidationDiagnostic(ValidationCategory category, string message, int? line = null, int? column = null) Parameters category ValidationCategory message string line int? column int? Properties Category public ValidationCategory Category { get; set; } Property Value ValidationCategory Column public int? Column { get; set; } Property Value int? Line public int? Line { get; set; } Property Value int? Message public string Message { get; set; } Property Value string Methods ToString() Returns a string that represents the current object. public override string ToString() Returns string A string that represents the current object."
+  },
+  "api/OfficeTalk.Validation.ValidationResult.html": {
+    "href": "api/OfficeTalk.Validation.ValidationResult.html",
+    "title": "Class ValidationResult | OfficeTalk Documentation",
+    "summary": "Class ValidationResult Namespace OfficeTalk.Validation Assembly OfficeTalk.dll The result of validating an OfficeTalk document. public class ValidationResult Inheritance object ValidationResult Properties Errors Validation errors that prevent execution. public List<ValidationDiagnostic> Errors { get; set; } Property Value List<ValidationDiagnostic> IsValid Whether the document is valid (no errors). public bool IsValid { get; } Property Value bool Warnings Validation warnings that don't prevent execution. public List<ValidationDiagnostic> Warnings { get; set; } Property Value List<ValidationDiagnostic>"
+  },
+  "api/OfficeTalk.Validation.html": {
+    "href": "api/OfficeTalk.Validation.html",
+    "title": "Namespace OfficeTalk.Validation | OfficeTalk Documentation",
+    "summary": "Namespace OfficeTalk.Validation Classes SyntacticValidator Validates the syntactic structure of a parsed OfficeTalk AST. Checks for required fields, valid operation combinations, and structural correctness. ValidationDiagnostic A single validation diagnostic (error or warning). ValidationResult The result of validating an OfficeTalk document. Enums ValidationCategory Validation error/warning categories from the OfficeTalk specification."
+  },
+  "index.html": {
+    "href": "index.html",
+    "title": "OfficeTalk .NET Library | OfficeTalk Documentation",
+    "summary": "OfficeTalk .NET Library A .NET 9 library for parsing and validating OfficeTalk documents — a grammar for deterministic modifications to Microsoft Office documents (Word, Excel, PowerPoint). Features Parse OfficeTalk documents into a typed AST Validate against syntactic rules (grammar-level checks, conflict detection) Installation dotnet add package SpecWorks.OfficeTalk Quick Start Parse an OfficeTalk Document using OfficeTalk.Parsing; var source = @\" OFFICETALK/1.0 DOCTYPE word AT body/heading[level=1] SET \"\"Annual Report — FY2026\"\" FORMAT font-size=28pt, color=#1F3864 AT body/paragraph[text*=\"\"teh company\"\"] REPLACE \"\"teh\"\" WITH \"\"the\"\" \"; var lexer = new OfficeTalkLexer(source); var tokens = lexer.Tokenize(); var parser = new OfficeTalkParser(tokens); var document = parser.Parse(); Console.WriteLine($\"Version: {document.Version}\"); Console.WriteLine($\"DocType: {document.DocType}\"); Console.WriteLine($\"Blocks: {document.OperationBlocks.Count}\"); Validate an OfficeTalk Document using OfficeTalk.Validation; var syntacticValidator = new SyntacticValidator(); var result = syntacticValidator.Validate(document); if (!result.IsValid) { foreach (var error in result.Errors) Console.Error.WriteLine(error); } Architecture OfficeTalk/ ├── Parsing/ Lexer and parser for OfficeTalk grammar │ ├── Token.cs Token types for the grammar │ ├── OfficeTalkLexer.cs Line-oriented tokenizer │ └── OfficeTalkParser.cs Parser producing typed AST ├── Ast/ Abstract syntax tree types │ ├── OfficeTalkDocument.cs Root AST node │ ├── OperationBlock.cs AT address + operations │ ├── Address.cs Address with segments │ ├── AddressSegment.cs Segment + predicates │ ├── Predicate.cs Predicate types │ ├── Operations.cs All operation types │ └── DataTypes.cs Color, Length, etc. └── Validation/ Syntactic validation ├── SyntacticValidator.cs └── ValidationResult.cs Requirements .NET 9.0 or later Testing cd dotnet dotnet test License MIT License Specification The full OfficeTalk specification is maintained in officetalk-spec.md. Key sections: §3 Document Structure — Headers, operation blocks, inspect blocks §4 Addressing — Path syntax with segments and predicates §5 Operations — SET, DELETE, FORMAT, COMMENT, INSPECT, and more §13 Formal Grammar — Complete ABNF grammar §14 Response Format — JSONL response schema with CDDL definitions Test Cases OfficeTalk includes a comprehensive test case suite in testcases/: Positive tests — Valid OfficeTalk documents that must parse successfully Negative tests — Invalid documents that must produce parse errors API Reference OfficeTalk API Documentation - Parser, AST, and validator API reference"
+  }
+}

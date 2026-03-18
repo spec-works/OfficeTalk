@@ -1,0 +1,891 @@
+{
+  "source_base_path": "/home/runner/work/OfficeTalk/OfficeTalk/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.AddSheetOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.AddSheetOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.AddSheetOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.AddSheetOperation.yml\" sourcestartlinenumber=\"1\">ADD SHEET &quot;name&quot;</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.Address.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.Address.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.Address",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.Address.yml\" sourcestartlinenumber=\"1\">An address composed of path segments separated by slashes.\nExample: body/heading[level=2, text=&quot;Methods&quot;]</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.AddressSegment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.AddressSegment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.AddressSegment",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.AddressSegment.yml\" sourcestartlinenumber=\"1\">A single segment in an address path, with optional predicates.\nExample: heading[level=2, text=&quot;Methods&quot;]</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.AppendOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.AppendOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.AppendOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.AppendOperation.yml\" sourcestartlinenumber=\"1\">APPEND content to end of element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.BareStringPredicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.BareStringPredicate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.BareStringPredicate",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.BareStringPredicate.yml\" sourcestartlinenumber=\"1\">A bare string predicate, used as a shorthand name (e.g., sheet[&quot;Revenue&quot;]).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.CellRefPredicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.CellRefPredicate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.CellRefPredicate",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.CellRefPredicate.yml\" sourcestartlinenumber=\"1\">A cell reference predicate for Excel addresses (e.g., A1, A1:D10).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ColorValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ColorValue.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ColorValue",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ColorValue.yml\" sourcestartlinenumber=\"1\">Represents a color value (hex or named).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.CommentOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.CommentOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.CommentOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.CommentOperation.yml\" sourcestartlinenumber=\"1\">COMMENT &quot;text&quot; — add a comment anchored to the addressed element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ContentValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ContentValue.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ContentValue",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ContentValue.yml\" sourcestartlinenumber=\"1\">Represents content that can be either an inline string or a content block.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.DeleteOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.DeleteOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.DeleteOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.DeleteOperation.yml\" sourcestartlinenumber=\"1\">DELETE [ROW|COLUMN|SLIDE|SHEET]</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.DeleteTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.DeleteTarget.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.DeleteTarget",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.DeleteTarget.yml\" sourcestartlinenumber=\"1\">The target of a DELETE operation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.DocType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.DocType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.DocType",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.DocType.yml\" sourcestartlinenumber=\"1\">The target document type for an OfficeTalk document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.DuplicateSlideOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.DuplicateSlideOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.DuplicateSlideOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.DuplicateSlideOperation.yml\" sourcestartlinenumber=\"1\">DUPLICATE SLIDE</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.FormatOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.FormatOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.FormatOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.FormatOperation.yml\" sourcestartlinenumber=\"1\">FORMAT key=value, key=value — apply formatting properties.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.IncludeLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.IncludeLayer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.IncludeLayer",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.IncludeLayer.yml\" sourcestartlinenumber=\"1\">Detail layers that can be requested in an INSPECT operation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertAfterOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertAfterOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertAfterOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertAfterOperation.yml\" sourcestartlinenumber=\"1\">INSERT AFTER content</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertBeforeOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertBeforeOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertBeforeOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertBeforeOperation.yml\" sourcestartlinenumber=\"1\">INSERT BEFORE content</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertColumnOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertColumnOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertColumnOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertColumnOperation.yml\" sourcestartlinenumber=\"1\">INSERT COLUMN BEFORE/AFTER</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertImageOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertImageOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertImageOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertImageOperation.yml\" sourcestartlinenumber=\"1\">INSERT IMAGE BEFORE/AFTER &quot;source&quot; — insert an image.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertListOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertListOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertListOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertListOperation.yml\" sourcestartlinenumber=\"1\">INSERT LIST BEFORE/AFTER [ordered|unordered] — create a list.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertPosition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertPosition",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertPosition.yml\" sourcestartlinenumber=\"1\">Position for INSERT operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertRowOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertRowOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertRowOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertRowOperation.yml\" sourcestartlinenumber=\"1\">INSERT ROW BEFORE/AFTER</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertSlideOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertSlideOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertSlideOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertSlideOperation.yml\" sourcestartlinenumber=\"1\">INSERT SLIDE BEFORE/AFTER</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InsertTableOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InsertTableOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InsertTableOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InsertTableOperation.yml\" sourcestartlinenumber=\"1\">INSERT TABLE BEFORE/AFTER rows=N, columns=M — create a new table.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.InspectBlock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.InspectBlock.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.InspectBlock",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.InspectBlock.yml\" sourcestartlinenumber=\"1\">An inspect block: an INSPECT address line followed by optional modifiers.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.KeyValuePredicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.KeyValuePredicate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.KeyValuePredicate",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.KeyValuePredicate.yml\" sourcestartlinenumber=\"1\">A key-value predicate with a comparison operator (e.g., level=2, text~=&quot;pattern&quot;).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.LengthUnit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.LengthUnit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.LengthUnit",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.LengthUnit.yml\" sourcestartlinenumber=\"1\">Length unit types supported by OfficeTalk.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.LengthValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.LengthValue.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.LengthValue",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.LengthValue.yml\" sourcestartlinenumber=\"1\">Represents a length value with a unit.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.LinkOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.LinkOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.LinkOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.LinkOperation.yml\" sourcestartlinenumber=\"1\">LINK &quot;url&quot; — create a hyperlink on the addressed element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ListItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ListItem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ListItem",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ListItem.yml\" sourcestartlinenumber=\"1\">A single item in an INSERT LIST operation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ListType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ListType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ListType",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ListType.yml\" sourcestartlinenumber=\"1\">Type of list for INSERT LIST operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.MergeCellsOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.MergeCellsOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.MergeCellsOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.MergeCellsOperation.yml\" sourcestartlinenumber=\"1\">MERGE CELLS TO address</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.OfficeTalkDocument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.OfficeTalkDocument.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.OfficeTalkDocument",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.OfficeTalkDocument.yml\" sourcestartlinenumber=\"1\">Root AST node representing a complete OfficeTalk document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.Operation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.Operation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.Operation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.Operation.yml\" sourcestartlinenumber=\"1\">Base class for all OfficeTalk operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.OperationBlock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.OperationBlock.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.OperationBlock",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.OperationBlock.yml\" sourcestartlinenumber=\"1\">An operation block: an address line (AT [EACH] address) followed by one or more operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ParseError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ParseError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ParseError",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ParseError.yml\" sourcestartlinenumber=\"1\">A parse error with location information.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.PositionalPredicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.PositionalPredicate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.PositionalPredicate",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.PositionalPredicate.yml\" sourcestartlinenumber=\"1\">A positional predicate using 1-based indexing (e.g., paragraph[3]).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.Predicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.Predicate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.Predicate",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.Predicate.yml\" sourcestartlinenumber=\"1\">A predicate used to filter elements within an address segment.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.PredicateOperator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.PredicateOperator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.PredicateOperator",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.PredicateOperator.yml\" sourcestartlinenumber=\"1\">Comparison operators used in key-value predicates.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.PrependOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.PrependOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.PrependOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.PrependOperation.yml\" sourcestartlinenumber=\"1\">PREPEND content to beginning of element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.PropertySetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.PropertySetting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.PropertySetting",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.PropertySetting.yml\" sourcestartlinenumber=\"1\">A document-level property setting (e.g., PROPERTY title=&quot;...&quot;).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.RenameSheetOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.RenameSheetOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.RenameSheetOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.RenameSheetOperation.yml\" sourcestartlinenumber=\"1\">RENAME SHEET &quot;newName&quot;</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.ReplaceOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.ReplaceOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.ReplaceOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.ReplaceOperation.yml\" sourcestartlinenumber=\"1\">REPLACE [ALL] &quot;search&quot; WITH &quot;replacement&quot;</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.RunDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.RunDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.RunDefinition",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.RunDefinition.yml\" sourcestartlinenumber=\"1\">A single run in a SET RUNS operation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.SetCellsOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.SetCellsOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.SetCellsOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.SetCellsOperation.yml\" sourcestartlinenumber=\"1\">SET CELLS &quot;val1&quot;, &quot;val2&quot;, ...</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.SetOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.SetOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.SetOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.SetOperation.yml\" sourcestartlinenumber=\"1\">SET content — replace element content with new text or content block.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.SetRunsOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.SetRunsOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.SetRunsOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.SetRunsOperation.yml\" sourcestartlinenumber=\"1\">SET RUNS — replace element content with individually formatted runs.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.StyleOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.StyleOperation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast.StyleOperation",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Ast.StyleOperation.yml\" sourcestartlinenumber=\"1\">STYLE &quot;styleName&quot; — apply a named style.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Ast.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Ast.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Ast",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Parsing.OfficeTalkLexer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Parsing.OfficeTalkLexer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Parsing.OfficeTalkLexer",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Parsing.OfficeTalkLexer.yml\" sourcestartlinenumber=\"1\">Line-oriented lexer for the OfficeTalk grammar.\nTokenizes input text into a sequence of tokens for the parser.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Parsing.OfficeTalkParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Parsing.OfficeTalkParser.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Parsing.OfficeTalkParser",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Parsing.OfficeTalkParser.yml\" sourcestartlinenumber=\"1\">Parses a token stream into an OfficeTalk AST.\nSupports error recovery — collects errors and continues parsing when possible.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Parsing.Token.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Parsing.Token.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Parsing.Token",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Parsing.Token.yml\" sourcestartlinenumber=\"1\">Represents a single token produced by the OfficeTalk lexer.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Parsing.TokenType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Parsing.TokenType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Parsing.TokenType",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Parsing.TokenType.yml\" sourcestartlinenumber=\"1\">All token types in the OfficeTalk grammar.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Parsing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Parsing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Parsing",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Validation.SyntacticValidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Validation.SyntacticValidator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Validation.SyntacticValidator",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Validation.SyntacticValidator.yml\" sourcestartlinenumber=\"1\">Validates the syntactic structure of a parsed OfficeTalk AST.\nChecks for required fields, valid operation combinations, and structural correctness.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Validation.ValidationCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Validation.ValidationCategory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Validation.ValidationCategory",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Validation.ValidationCategory.yml\" sourcestartlinenumber=\"1\">Validation error/warning categories from the OfficeTalk specification.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Validation.ValidationDiagnostic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Validation.ValidationDiagnostic.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Validation.ValidationDiagnostic",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Validation.ValidationDiagnostic.yml\" sourcestartlinenumber=\"1\">A single validation diagnostic (error or warning).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Validation.ValidationResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Validation.ValidationResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Validation.ValidationResult",
+      "Summary": "<p sourcefile=\"api/OfficeTalk.Validation.ValidationResult.yml\" sourcestartlinenumber=\"1\">The result of validating an OfficeTalk document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/OfficeTalk.Validation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/OfficeTalk.Validation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "OfficeTalk.Validation",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
