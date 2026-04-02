@@ -1,0 +1,24 @@
+{
+  "name": "insert-image",
+  "description": "INSERT IMAGE with properties",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/heading[text=\"Results\"]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_IMAGE",
+          "position": "AFTER",
+          "source": "charts/revenue-q1.png",
+          "properties": {
+            "alt": "Revenue chart",
+            "width": "6in"
+          }
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

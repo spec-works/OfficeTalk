@@ -53,6 +53,12 @@ public class OfficeTalkParser
                 if (block != null)
                     doc.OperationBlocks.Add(block);
             }
+            else if (token.Type == TokenType.INSPECT)
+            {
+                var block = ParseInspectBlock();
+                if (block != null)
+                    doc.InspectBlocks.Add(block);
+            }
             else if (token.Type == TokenType.PROPERTY)
             {
                 var prop = ParsePropertySetting();
@@ -61,7 +67,7 @@ public class OfficeTalkParser
             }
             else
             {
-                AddError($"Unexpected token '{token.Value}', expected AT or PROPERTY", token);
+                AddError($"Unexpected token '{token.Value}', expected AT, INSPECT, or PROPERTY", token);
                 Advance();
             }
         }
@@ -180,6 +186,120 @@ public class OfficeTalkParser
         }
 
         return block;
+    }
+
+    private InspectBlock? ParseInspectBlock()
+    {
+        var inspectToken = Current();
+        Advance(); // skip INSPECT
+
+        var address = ParseAddress();
+        if (address == null)
+            return null;
+
+        var block = new InspectBlock
+        {
+            Address = address,
+            Line = inspectToken.Line
+        };
+
+        SkipNewLines();
+
+        // Parse modifiers (DEPTH, INCLUDE, CONTEXT) on subsequent indented lines
+        while (!IsAtEnd())
+        {
+            SkipCommentsAndNewLines();
+            if (IsAtEnd()) break;
+
+            var token = Current();
+
+            if (token.Type == TokenType.DEPTH)
+            {
+                Advance();
+                if (!IsAtEnd() && Current().Type == TokenType.Number)
+                {
+                    if (int.TryParse(Current().Value, out int depth))
+                        block.Depth = depth;
+                    else
+                        AddError($"Invalid DEPTH value: '{Current().Value}'", Current());
+                    Advance();
+                }
+                else
+                {
+                    AddError("Expected integer after DEPTH", token);
+                }
+            }
+            else if (token.Type == TokenType.INCLUDE)
+            {
+                Advance();
+                ParseIncludeLayers(block, token);
+            }
+            else if (token.Type == TokenType.CONTEXT)
+            {
+                Advance();
+                if (!IsAtEnd() && Current().Type == TokenType.Number)
+                {
+                    if (int.TryParse(Current().Value, out int context))
+                        block.Context = context;
+                    else
+                        AddError($"Invalid CONTEXT value: '{Current().Value}'", Current());
+                    Advance();
+                }
+                else
+                {
+                    AddError("Expected integer after CONTEXT", token);
+                }
+            }
+            else
+            {
+                break; // Not a modifier — end of this inspect block
+            }
+        }
+
+        return block;
+    }
+
+    private void ParseIncludeLayers(InspectBlock block, Token includeToken)
+    {
+        while (!IsAtEnd() && Current().Type != TokenType.NewLine && Current().Type != TokenType.EOF)
+        {
+            if (Current().Type == TokenType.Comma)
+            {
+                Advance();
+                continue;
+            }
+
+            if (Current().Type == TokenType.Identifier || IsSegmentKeyword(Current().Type))
+            {
+                var layerName = Current().Value.ToLowerInvariant();
+                if (layerName == "content")
+                {
+                    if (!block.Include.Contains(IncludeLayer.Content))
+                        block.Include.Add(IncludeLayer.Content);
+                    Advance();
+                }
+                else if (layerName == "properties")
+                {
+                    if (!block.Include.Contains(IncludeLayer.Properties))
+                        block.Include.Add(IncludeLayer.Properties);
+                    Advance();
+                }
+                else
+                {
+                    AddError($"Unknown INCLUDE layer: '{Current().Value}', expected 'content' or 'properties'", Current());
+                    Advance();
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (block.Include.Count == 0)
+        {
+            AddError("Expected at least one layer (content, properties) after INCLUDE", includeToken);
+        }
     }
 
     private PropertySetting? ParsePropertySetting()
@@ -400,7 +520,7 @@ public class OfficeTalkParser
 
         return token.Type switch
         {
-            TokenType.SET => ParseSetOrSetCells(),
+            TokenType.SET => ParseSetOrSetCellsOrSetRuns(),
             TokenType.REPLACE => ParseReplace(),
             TokenType.INSERT => ParseInsert(),
             TokenType.DELETE => ParseDelete(),
@@ -413,11 +533,12 @@ public class OfficeTalkParser
             TokenType.RENAME => ParseRename(),
             TokenType.ADD => ParseAdd(),
             TokenType.COMMENT_KW => ParseComment(),
+            TokenType.LINK => ParseLink(),
             _ => HandleUnexpectedOperation(token)
         };
     }
 
-    private Operation? ParseSetOrSetCells()
+    private Operation? ParseSetOrSetCellsOrSetRuns()
     {
         var setToken = Current();
         Advance(); // skip SET
@@ -425,6 +546,11 @@ public class OfficeTalkParser
         if (!IsAtEnd() && Current().Type == TokenType.CELLS)
         {
             return ParseSetCellsAfterSet(setToken);
+        }
+
+        if (!IsAtEnd() && Current().Type == TokenType.RUNS)
+        {
+            return ParseSetRunsAfterSet(setToken);
         }
 
         var content = ParseContentValue();
@@ -507,7 +633,7 @@ public class OfficeTalkParser
 
         if (IsAtEnd())
         {
-            AddError("Expected BEFORE, AFTER, ROW, COLUMN, or SLIDE after INSERT", insToken);
+            AddError("Expected BEFORE, AFTER, ROW, COLUMN, SLIDE, IMAGE, TABLE, or LIST after INSERT", insToken);
             return null;
         }
 
@@ -549,6 +675,27 @@ public class OfficeTalkParser
         {
             Advance();
             return ParseInsertShapeBody(insToken);
+        }
+
+        // INSERT IMAGE BEFORE/AFTER "source"
+        if (next.Type == TokenType.IMAGE)
+        {
+            Advance();
+            return ParseInsertImage(insToken);
+        }
+
+        // INSERT TABLE BEFORE/AFTER rows=N, columns=M
+        if (next.Type == TokenType.TABLE)
+        {
+            Advance();
+            return ParseInsertTable(insToken);
+        }
+
+        // INSERT LIST BEFORE/AFTER [ordered|unordered]
+        if (next.Type == TokenType.LIST)
+        {
+            Advance();
+            return ParseInsertList(insToken);
         }
 
         // INSERT BEFORE content
@@ -993,6 +1140,296 @@ public class OfficeTalkParser
         return new CommentOperation { Content = content, Line = token.Line };
     }
 
+    private Operation? ParseLink()
+    {
+        var linkToken = Current();
+        Advance(); // skip LINK
+
+        if (IsAtEnd() || Current().Type != TokenType.String)
+        {
+            AddError("Expected URL string after LINK", linkToken);
+            return null;
+        }
+
+        var url = Current().Value;
+        Advance();
+
+        return new LinkOperation { Url = url, Line = linkToken.Line };
+    }
+
+    private Operation? ParseInsertImage(Token insToken)
+    {
+        var pos = ParseInsertPosition(insToken);
+        if (!pos.HasValue) return null;
+
+        if (IsAtEnd() || Current().Type != TokenType.String)
+        {
+            AddError("Expected image source string after INSERT IMAGE BEFORE/AFTER", insToken);
+            return null;
+        }
+
+        var source = Current().Value;
+        Advance();
+
+        // Parse optional indented properties (alt, width, height, position) on next lines
+        var properties = ParseIndentedProperties();
+
+        return new InsertImageOperation
+        {
+            Position = pos.Value,
+            Source = source,
+            Properties = properties,
+            Line = insToken.Line
+        };
+    }
+
+    private Operation? ParseInsertTable(Token insToken)
+    {
+        var pos = ParseInsertPosition(insToken);
+        if (!pos.HasValue) return null;
+
+        // Parse rows=N, columns=M as key=value pairs
+        int rows = 0, columns = 0;
+        var properties = new Dictionary<string, object>();
+
+        // Parse inline key=value pairs: rows=N, columns=M
+        while (!IsAtEnd() && Current().Type != TokenType.NewLine && Current().Type != TokenType.EOF)
+        {
+            if (Current().Type == TokenType.Comma)
+            {
+                Advance();
+                continue;
+            }
+
+            if (Current().Type != TokenType.Identifier && !IsSegmentKeyword(Current().Type))
+                break;
+
+            var key = Current().Value;
+            Advance();
+
+            if (IsAtEnd() || Current().Type != TokenType.Equals)
+            {
+                AddError($"Expected '=' after table property '{key}'", insToken);
+                break;
+            }
+            Advance(); // skip =
+
+            if (IsAtEnd())
+            {
+                AddError($"Expected value for table property '{key}'", insToken);
+                break;
+            }
+
+            var value = ParseFormatValue();
+
+            if (key.Equals("rows", StringComparison.OrdinalIgnoreCase) && value is double d1)
+                rows = (int)d1;
+            else if (key.Equals("columns", StringComparison.OrdinalIgnoreCase) && value is double d2)
+                columns = (int)d2;
+            else
+                properties[key] = value;
+        }
+
+        // Also parse indented properties on next lines
+        var indentedProps = ParseIndentedProperties();
+        foreach (var kvp in indentedProps)
+        {
+            if (kvp.Key.Equals("rows", StringComparison.OrdinalIgnoreCase) && kvp.Value is double d3)
+                rows = (int)d3;
+            else if (kvp.Key.Equals("columns", StringComparison.OrdinalIgnoreCase) && kvp.Value is double d4)
+                columns = (int)d4;
+            else
+                properties[kvp.Key] = kvp.Value;
+        }
+
+        if (rows <= 0 || columns <= 0)
+        {
+            AddError("INSERT TABLE requires rows and columns with positive values", insToken);
+            return null;
+        }
+
+        return new InsertTableOperation
+        {
+            Position = pos.Value,
+            Rows = rows,
+            Columns = columns,
+            Properties = properties,
+            Line = insToken.Line
+        };
+    }
+
+    private Operation? ParseInsertList(Token insToken)
+    {
+        var pos = ParseInsertPosition(insToken);
+        if (!pos.HasValue) return null;
+
+        // Parse optional list type (ordered/unordered)
+        var listType = Ast.ListType.Unordered;
+        if (!IsAtEnd() && Current().Type == TokenType.Identifier)
+        {
+            var typeValue = Current().Value.ToLowerInvariant();
+            if (typeValue == "ordered")
+            {
+                listType = Ast.ListType.Ordered;
+                Advance();
+            }
+            else if (typeValue == "unordered")
+            {
+                listType = Ast.ListType.Unordered;
+                Advance();
+            }
+        }
+
+        // Parse ITEM lines (on subsequent lines, indented)
+        var items = new List<ListItem>();
+        SkipNewLines();
+
+        while (!IsAtEnd() && Current().Type == TokenType.ITEM)
+        {
+            Advance(); // skip ITEM
+
+            var content = ParseContentValue();
+            if (content == null)
+            {
+                AddError("Expected content after ITEM", Current());
+                break;
+            }
+
+            bool isNested = false;
+            if (!IsAtEnd() && Current().Type == TokenType.NESTED)
+            {
+                isNested = true;
+                Advance();
+            }
+
+            items.Add(new ListItem { Content = content, IsNested = isNested });
+            SkipNewLines();
+        }
+
+        return new InsertListOperation
+        {
+            Position = pos.Value,
+            ListType = listType,
+            Items = items,
+            Line = insToken.Line
+        };
+    }
+
+    private Operation? ParseSetRunsAfterSet(Token setToken)
+    {
+        Advance(); // skip RUNS
+
+        var runs = new List<RunDefinition>();
+        SkipNewLines();
+
+        while (!IsAtEnd() && Current().Type == TokenType.RUN)
+        {
+            Advance(); // skip RUN
+
+            var content = ParseContentValue();
+            if (content == null)
+            {
+                AddError("Expected content after RUN", setToken);
+                break;
+            }
+
+            // Parse optional inline properties: key=value, key=value
+            var properties = new Dictionary<string, object>();
+            while (!IsAtEnd() && Current().Type != TokenType.NewLine && Current().Type != TokenType.EOF
+                && Current().Type != TokenType.RUN)
+            {
+                if (Current().Type == TokenType.Comma)
+                {
+                    Advance();
+                    continue;
+                }
+
+                if (Current().Type != TokenType.Identifier && !IsSegmentKeyword(Current().Type))
+                    break;
+
+                var key = Current().Value;
+                Advance();
+
+                if (IsAtEnd() || Current().Type != TokenType.Equals)
+                {
+                    AddError($"Expected '=' after run property '{key}'", setToken);
+                    break;
+                }
+                Advance(); // skip =
+
+                if (IsAtEnd())
+                {
+                    AddError($"Expected value for run property '{key}'", setToken);
+                    break;
+                }
+
+                var value = ParseFormatValue();
+                properties[key] = value;
+            }
+
+            runs.Add(new RunDefinition { Content = content, Properties = properties });
+            SkipNewLines();
+        }
+
+        return new SetRunsOperation { Runs = runs, Line = setToken.Line };
+    }
+
+    /// <summary>
+    /// Parse indented key=value properties on subsequent lines.
+    /// Used by INSERT IMAGE and INSERT TABLE for multi-line property blocks.
+    /// Stops when it hits a non-property line (another operation keyword, AT, etc.)
+    /// </summary>
+    private Dictionary<string, object> ParseIndentedProperties()
+    {
+        var properties = new Dictionary<string, object>();
+
+        // Save position to peek ahead
+        while (true)
+        {
+            // Skip newlines
+            int savedPos = _pos;
+            SkipNewLines();
+
+            if (IsAtEnd()) break;
+
+            var token = Current();
+            // If the next token is an identifier that could be a property key followed by =,
+            // parse it. Otherwise, restore position and stop.
+            if ((token.Type == TokenType.Identifier || IsSegmentKeyword(token.Type))
+                && !IsOperationKeyword(token.Type))
+            {
+                // Peek ahead for = sign
+                int peekPos = _pos + 1;
+                if (peekPos < _tokens.Count && _tokens[peekPos].Type == TokenType.Equals)
+                {
+                    var key = token.Value;
+                    Advance(); // skip key
+                    Advance(); // skip =
+
+                    if (!IsAtEnd())
+                    {
+                        var value = ParseFormatValue();
+                        properties[key] = value;
+                        continue;
+                    }
+                }
+            }
+
+            // Not a property — restore position and stop
+            _pos = savedPos;
+            break;
+        }
+
+        return properties;
+    }
+
+    private static bool IsOperationKeyword(TokenType type) =>
+        type is TokenType.SET or TokenType.REPLACE or TokenType.INSERT or TokenType.DELETE
+            or TokenType.APPEND or TokenType.PREPEND or TokenType.FORMAT or TokenType.STYLE
+            or TokenType.MERGE or TokenType.DUPLICATE or TokenType.RENAME or TokenType.ADD
+            or TokenType.COMMENT_KW or TokenType.LINK or TokenType.AT or TokenType.INSPECT
+            or TokenType.PROPERTY;
+
     private ContentValue? ParseContentValue()
     {
         if (IsAtEnd()) return null;
@@ -1058,5 +1495,9 @@ public class OfficeTalkParser
             or TokenType.APPEND or TokenType.PREPEND or TokenType.MERGE or TokenType.TO
             or TokenType.ALL or TokenType.EACH or TokenType.AT or TokenType.WITH
             or TokenType.PROPERTY or TokenType.DocTypeKeyword
-            or TokenType.TEXTBOX or TokenType.SHAPE;
+            or TokenType.TEXTBOX or TokenType.SHAPE
+            or TokenType.DEPTH or TokenType.INCLUDE or TokenType.CONTEXT
+            or TokenType.LINK or TokenType.IMAGE or TokenType.TABLE
+            or TokenType.LIST or TokenType.ITEM or TokenType.RUNS
+            or TokenType.RUN or TokenType.NESTED;
 }

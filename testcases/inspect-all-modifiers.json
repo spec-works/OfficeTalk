@@ -1,0 +1,17 @@
+{
+  "name": "inspect-all-modifiers",
+  "description": "INSPECT with all modifiers: DEPTH, INCLUDE, and CONTEXT",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/table[1]",
+      "depth": 2,
+      "include": ["content", "properties"],
+      "context": 3
+    }
+  ],
+  "isValid": true
+}

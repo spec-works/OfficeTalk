@@ -315,6 +315,8 @@ SET ""Updated text""
         bare.Value.Should().Be("Revenue");
     }
 
+    // ================ INSERT TEXTBOX tests ================
+
     [Fact]
     public void Parse_InsertTextbox_AllProperties()
     {
@@ -393,5 +395,361 @@ SET ""Updated text""
         doc.OperationBlocks[0].Operations.Should().HaveCount(2);
         doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTextboxOperation>();
         doc.OperationBlocks[0].Operations[1].Should().BeOfType<FormatOperation>();
+    }
+
+    // ================ LINK operation tests ================
+
+    [Fact]
+    public void Parse_Link_ProducesLinkOperation()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nLINK \"https://example.com\"\n");
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks.Should().HaveCount(1);
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<LinkOperation>().Subject;
+        op.Url.Should().Be("https://example.com");
+    }
+
+    [Fact]
+    public void Parse_Link_MissingUrl_ProducesError()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nLINK\n");
+
+        doc.Errors.Should().NotBeEmpty();
+        doc.Errors[0].Message.Should().Contain("URL");
+    }
+
+    // ================ INSERT IMAGE tests ================
+
+    [Fact]
+    public void Parse_InsertImage_BasicAfter()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nINSERT IMAGE AFTER \"logo.png\"\n");
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertImageOperation>().Subject;
+        op.Position.Should().Be(InsertPosition.After);
+        op.Source.Should().Be("logo.png");
+        op.Properties.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Parse_InsertImage_WithProperties()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT IMAGE BEFORE \"diagram.png\"\n  alt=\"Architecture\"\n  width=6in\n  height=4in\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertImageOperation>().Subject;
+        op.Position.Should().Be(InsertPosition.Before);
+        op.Source.Should().Be("diagram.png");
+        op.Properties.Should().ContainKey("alt");
+        op.Properties["alt"].Should().Be("Architecture");
+        op.Properties.Should().ContainKey("width");
+        op.Properties["width"].Should().Be("6in");
+    }
+
+    [Fact]
+    public void Parse_InsertImage_MissingSource_ProducesError()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nINSERT IMAGE AFTER\n");
+
+        doc.Errors.Should().NotBeEmpty();
+        doc.Errors[0].Message.Should().Contain("image source");
+    }
+
+    // ================ INSERT TABLE tests ================
+
+    [Fact]
+    public void Parse_InsertTable_BasicDimensions()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT TABLE AFTER rows=3, columns=4\n");
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTableOperation>().Subject;
+        op.Position.Should().Be(InsertPosition.After);
+        op.Rows.Should().Be(3);
+        op.Columns.Should().Be(4);
+    }
+
+    [Fact]
+    public void Parse_InsertTable_MissingDimensions_ProducesError()
+    {
+        var doc = Parse("OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT TABLE AFTER\n");
+
+        doc.Errors.Should().NotBeEmpty();
+        doc.Errors[0].Message.Should().Contain("rows");
+    }
+
+    [Fact]
+    public void Parse_InsertTable_FollowedBySetCells()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT TABLE AFTER rows=2, columns=3\nSET CELLS \"A\", \"B\", \"C\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks[0].Operations.Should().HaveCount(2);
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertTableOperation>();
+        doc.OperationBlocks[0].Operations[1].Should().BeOfType<SetCellsOperation>();
+    }
+
+    // ================ INSERT LIST tests ================
+
+    [Fact]
+    public void Parse_InsertList_UnorderedWithItems()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT LIST AFTER unordered\n  ITEM \"First item\"\n  ITEM \"Second item\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertListOperation>().Subject;
+        op.Position.Should().Be(InsertPosition.After);
+        op.ListType.Should().Be(ListType.Unordered);
+        op.Items.Should().HaveCount(2);
+        op.Items[0].Content.Text.Should().Be("First item");
+        op.Items[1].Content.Text.Should().Be("Second item");
+        op.Items[0].IsNested.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Parse_InsertList_OrderedType()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nINSERT LIST BEFORE ordered\n  ITEM \"Step one\"\n  ITEM \"Step two\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertListOperation>().Subject;
+        op.ListType.Should().Be(ListType.Ordered);
+    }
+
+    [Fact]
+    public void Parse_InsertList_NestedItems()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT LIST AFTER unordered\n  ITEM \"Parent\"\n  ITEM \"Child\" nested\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertListOperation>().Subject;
+        op.Items.Should().HaveCount(2);
+        op.Items[0].IsNested.Should().BeFalse();
+        op.Items[1].IsNested.Should().BeTrue();
+        op.Items[1].Content.Text.Should().Be("Child");
+    }
+
+    [Fact]
+    public void Parse_InsertList_DefaultsToUnordered()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/heading[1]\nINSERT LIST AFTER\n  ITEM \"Only item\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertListOperation>().Subject;
+        op.ListType.Should().Be(ListType.Unordered);
+        op.Items.Should().HaveCount(1);
+    }
+
+    // ================ SET RUNS tests ================
+
+    [Fact]
+    public void Parse_SetRuns_BasicRuns()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n  RUN \"plain text\"\n  RUN \"bold\" bold=true\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(2);
+        op.Runs[0].Content.Text.Should().Be("plain text");
+        op.Runs[0].Properties.Should().BeEmpty();
+        op.Runs[1].Content.Text.Should().Be("bold");
+        op.Runs[1].Properties.Should().ContainKey("bold");
+        op.Runs[1].Properties["bold"].Should().Be(true);
+    }
+
+    [Fact]
+    public void Parse_SetRuns_MultipleProperties()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n  RUN \"styled\" bold=true, italic=true, color=#FF0000\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(1);
+        op.Runs[0].Properties.Should().HaveCount(3);
+        op.Runs[0].Properties["bold"].Should().Be(true);
+        op.Runs[0].Properties["italic"].Should().Be(true);
+        op.Runs[0].Properties["color"].Should().Be("#FF0000");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_WithHref()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n  RUN \"Visit \"\n  RUN \"us\" href=\"https://example.com\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(2);
+        op.Runs[1].Properties["href"].Should().Be("https://example.com");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_EmptyRuns()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().BeEmpty();
+    }
+
+    // ================ Mixed new operations in blocks ================
+
+    [Fact]
+    public void Parse_BlockWithLinkAfterInsertAfter()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[3]\nINSERT AFTER \"See the report.\"\nLINK \"https://example.com\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks[0].Operations.Should().HaveCount(2);
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        doc.OperationBlocks[0].Operations[1].Should().BeOfType<LinkOperation>();
+    }
+
+    // ================ New spec properties (background-color, borders) ================
+
+    [Fact]
+    public void Parse_Format_BackgroundColor_ParsesAsProperty()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT background-color=#F0F0F0\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties.Should().ContainKey("background-color");
+        format.Properties["background-color"].Should().Be("#F0F0F0");
+    }
+
+    [Fact]
+    public void Parse_Format_ParagraphBorders_AllProperties()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT border-bottom=single, border-color=#CCCCCC, border-width=1pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties.Should().ContainKey("border-bottom");
+        format.Properties["border-bottom"].Should().Be("single");
+        format.Properties.Should().ContainKey("border-color");
+        format.Properties["border-color"].Should().Be("#CCCCCC");
+        format.Properties.Should().ContainKey("border-width");
+        format.Properties["border-width"].Should().Be("1pt");
+    }
+
+    [Fact]
+    public void Parse_Format_AllFourBorderSides()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nFORMAT border-top=single, border-bottom=double, border-left=thick, border-right=dashed\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var format = doc.OperationBlocks[0].Operations[0].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties["border-top"].Should().Be("single");
+        format.Properties["border-bottom"].Should().Be("double");
+        format.Properties["border-left"].Should().Be("thick");
+        format.Properties["border-right"].Should().Be("dashed");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_BackgroundColorOnRun()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n  RUN \"code\" font-name=\"Consolas\" background-color=#F5F5F5\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(1);
+        op.Runs[0].Properties["font-name"].Should().Be("Consolas");
+        op.Runs[0].Properties["background-color"].Should().Be("#F5F5F5");
+    }
+
+    [Fact]
+    public void Parse_SetRuns_SyntaxHighlightedCodePattern()
+    {
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nSET RUNS\n" +
+                    "  RUN \"const \" color=#0000FF font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n" +
+                    "  RUN \"x\" color=#001080 font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n" +
+                    "  RUN \" = 42;\" font-name=\"Consolas\" font-size=10pt background-color=#F5F5F5\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        var op = doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetRunsOperation>().Subject;
+        op.Runs.Should().HaveCount(3);
+        op.Runs[0].Properties["color"].Should().Be("#0000FF");
+        op.Runs[0].Properties["background-color"].Should().Be("#F5F5F5");
+        op.Runs[1].Properties["color"].Should().Be("#001080");
+        op.Runs[2].Content.Text.Should().Be(" = 42;");
+    }
+
+    [Fact]
+    public void Parse_ThematicBreakPattern()
+    {
+        // Thematic break = empty paragraph with bottom border
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\nAT body/paragraph[1]\nINSERT AFTER \"\"\nFORMAT border-bottom=single, border-color=#CCCCCC, spacing-after=12pt\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.OperationBlocks[0].Operations.Should().HaveCount(2);
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        var format = doc.OperationBlocks[0].Operations[1].Should().BeOfType<FormatOperation>().Subject;
+        format.Properties["border-bottom"].Should().Be("single");
+        format.Properties["border-color"].Should().Be("#CCCCCC");
+        format.Properties["spacing-after"].Should().Be("12pt");
+    }
+
+    [Fact]
+    public void Parse_MarkdownDocumentConstructionPattern()
+    {
+        // End-to-end test of the pattern from spec §12.16
+        var input = "OFFICETALK/1.0\nDOCTYPE word\n\n" +
+                    "PROPERTY title=\"Getting Started\"\n\n" +
+                    "AT body/paragraph[1]\n" +
+                    "SET \"Heading\"\n" +
+                    "STYLE \"Heading1\"\n\n" +
+                    "AT body/paragraph[1]\n" +
+                    "INSERT AFTER \"\"\n" +
+                    "SET RUNS\n" +
+                    "  RUN \"Visit \"\n" +
+                    "  RUN \"our site\" href=\"https://example.com\" color=#0563C1 underline=single\n\n" +
+                    "AT body/paragraph[2]\n" +
+                    "INSERT AFTER \"\"\n" +
+                    "FORMAT border-bottom=single, border-color=#CCCCCC\n\n" +
+                    "AT body/paragraph[3]\n" +
+                    "INSERT LIST AFTER unordered\n" +
+                    "  ITEM \"First\"\n" +
+                    "  ITEM \"Second\"\n";
+        var doc = Parse(input);
+
+        doc.Errors.Should().BeEmpty();
+        doc.PropertySettings.Should().Contain(p => p.Name == "title");
+        doc.OperationBlocks.Should().HaveCount(4);
+
+        // Block 1: SET + STYLE
+        doc.OperationBlocks[0].Operations[0].Should().BeOfType<SetOperation>();
+        doc.OperationBlocks[0].Operations[1].Should().BeOfType<StyleOperation>();
+
+        // Block 2: INSERT AFTER + SET RUNS
+        doc.OperationBlocks[1].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        doc.OperationBlocks[1].Operations[1].Should().BeOfType<SetRunsOperation>();
+
+        // Block 3: INSERT AFTER + FORMAT (thematic break)
+        doc.OperationBlocks[2].Operations[0].Should().BeOfType<InsertAfterOperation>();
+        var fmt = doc.OperationBlocks[2].Operations[1].Should().BeOfType<FormatOperation>().Subject;
+        fmt.Properties.Should().ContainKey("border-bottom");
+
+        // Block 4: INSERT LIST
+        doc.OperationBlocks[3].Operations[0].Should().BeOfType<InsertListOperation>();
     }
 }

@@ -438,7 +438,7 @@ Error example:
 The JSONL response format is identified by the media type:
 
 ```
-application/officetalk-response+jsonl
+application/officetalk-response
 ```
 
 Implementations that accept OfficeTalk documents and produce responses

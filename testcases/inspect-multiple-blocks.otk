@@ -1,0 +1,12 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+  INCLUDE content
+
+INSPECT body/table[1]
+  DEPTH 1
+  INCLUDE content, properties
+
+INSPECT body/paragraph[1]
+  CONTEXT 2

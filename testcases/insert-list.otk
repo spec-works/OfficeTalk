@@ -1,0 +1,8 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/heading[text="Action Items"]
+INSERT LIST AFTER unordered
+  ITEM "Review the Q1 financials"
+  ITEM "Schedule follow-up meeting"
+  ITEM "Update the project timeline"

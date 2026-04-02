@@ -33,10 +33,27 @@ public class SyntacticValidator
                 error.Column));
         }
 
+        // Check for mixed read/write operations
+        bool hasWriteOps = document.OperationBlocks.Count > 0 || document.PropertySettings.Count > 0;
+        bool hasInspectOps = document.InspectBlocks.Count > 0;
+
+        if (hasWriteOps && hasInspectOps)
+        {
+            result.Errors.Add(new ValidationDiagnostic(
+                ValidationCategory.MixedOperations,
+                "Document mixes INSPECT and write operations (AT/PROPERTY). A document must contain either INSPECT blocks or write operations, not both."));
+        }
+
         // Validate operation blocks
         foreach (var block in document.OperationBlocks)
         {
             ValidateBlock(block, document.DocType, result);
+        }
+
+        // Validate inspect blocks
+        foreach (var block in document.InspectBlocks)
+        {
+            ValidateInspectBlock(block, result);
         }
 
         // Validate property settings
@@ -220,6 +237,33 @@ public class SyntacticValidator
             result.Warnings.Add(new ValidationDiagnostic(
                 ValidationCategory.StyleOverride,
                 "Operation block contains both STYLE and FORMAT. FORMAT properties may override style properties.",
+                block.Line));
+        }
+    }
+
+    private static void ValidateInspectBlock(InspectBlock block, ValidationResult result)
+    {
+        if (block.Address.Segments.Count == 0)
+        {
+            result.Errors.Add(new ValidationDiagnostic(
+                ValidationCategory.Syntax,
+                "INSPECT block has an empty address.",
+                block.Line));
+        }
+
+        if (block.Depth < 0)
+        {
+            result.Errors.Add(new ValidationDiagnostic(
+                ValidationCategory.InvalidValue,
+                $"DEPTH must be a non-negative integer, got {block.Depth}.",
+                block.Line));
+        }
+
+        if (block.Context < 0)
+        {
+            result.Errors.Add(new ValidationDiagnostic(
+                ValidationCategory.InvalidValue,
+                $"CONTEXT must be a non-negative integer, got {block.Context}.",
                 block.Line));
         }
     }

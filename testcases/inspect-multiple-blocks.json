@@ -1,0 +1,29 @@
+{
+  "name": "inspect-multiple-blocks",
+  "description": "Multiple INSPECT blocks with different modifiers",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/heading",
+      "depth": 0,
+      "include": ["content"],
+      "context": 0
+    },
+    {
+      "address": "body/table[1]",
+      "depth": 1,
+      "include": ["content", "properties"],
+      "context": 0
+    },
+    {
+      "address": "body/paragraph[1]",
+      "depth": 0,
+      "include": [],
+      "context": 2
+    }
+  ],
+  "isValid": true
+}

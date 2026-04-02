@@ -1,0 +1,30 @@
+{
+  "name": "set-runs-href",
+  "description": "SET RUNS with hyperlink and formatting on a run",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[1]",
+      "each": false,
+      "operations": [
+        {
+          "type": "SET_RUNS",
+          "runs": [
+            { "content": "Visit " },
+            {
+              "content": "our website",
+              "properties": {
+                "href": "https://example.com",
+                "color": "#2B579A",
+                "underline": "single"
+              }
+            },
+            { "content": " for more information." }
+          ]
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

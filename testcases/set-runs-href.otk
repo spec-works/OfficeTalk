@@ -1,0 +1,8 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[1]
+SET RUNS
+  RUN "Visit "
+  RUN "our website" href="https://example.com", color=#2B579A, underline=single
+  RUN " for more information."

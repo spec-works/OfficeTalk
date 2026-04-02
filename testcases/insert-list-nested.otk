@@ -1,0 +1,10 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/heading[text="Overview"]
+INSERT LIST AFTER unordered
+  ITEM "Backend services"
+  ITEM "Authentication" nested
+  ITEM "Database" nested
+  ITEM "Frontend components"
+  ITEM "Dashboard" nested

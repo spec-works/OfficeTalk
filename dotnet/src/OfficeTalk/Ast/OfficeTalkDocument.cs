@@ -21,6 +21,11 @@ public class OfficeTalkDocument
     public List<OperationBlock> OperationBlocks { get; set; } = new();
 
     /// <summary>
+    /// Inspect blocks (INSPECT address + modifiers).
+    /// </summary>
+    public List<InspectBlock> InspectBlocks { get; set; } = new();
+
+    /// <summary>
     /// Document-level property settings.
     /// </summary>
     public List<PropertySetting> PropertySettings { get; set; } = new();

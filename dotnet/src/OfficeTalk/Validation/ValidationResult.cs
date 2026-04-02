@@ -76,5 +76,7 @@ public enum ValidationCategory
     /// <summary>Operation has no effect.</summary>
     RedundantOp,
     /// <summary>Use of deprecated syntax.</summary>
-    Deprecated
+    Deprecated,
+    /// <summary>Document mixes INSPECT and write operations.</summary>
+    MixedOperations
 }

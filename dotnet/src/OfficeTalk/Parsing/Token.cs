@@ -62,6 +62,22 @@ public enum TokenType
     TEXTBOX,
     SHAPE,
 
+    // New operation keywords
+    LINK,
+    IMAGE,
+    TABLE,
+    LIST,
+    ITEM,
+    RUNS,
+    RUN,
+    NESTED,
+
+    // Inspect keywords
+    INSPECT,
+    DEPTH,
+    INCLUDE,
+    CONTEXT,
+
     // Document type values
     Word,
     Excel,

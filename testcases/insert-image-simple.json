@@ -1,0 +1,20 @@
+{
+  "name": "insert-image-simple",
+  "description": "INSERT IMAGE with no optional properties",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [
+    {
+      "address": "body/paragraph[3]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_IMAGE",
+          "position": "BEFORE",
+          "source": "logo.png"
+        }
+      ]
+    }
+  ],
+  "propertySettings": []
+}

@@ -1,0 +1,5 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+INSPECT body/heading
+  INCLUDE metadata

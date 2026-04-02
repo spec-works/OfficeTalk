@@ -1,0 +1,29 @@
+{
+  "name": "inspect-predicates",
+  "description": "Various predicate types on INSPECT addresses",
+  "version": "1.0",
+  "docType": "word",
+  "operationBlocks": [],
+  "propertySettings": [],
+  "inspectBlocks": [
+    {
+      "address": "body/heading[level=\"1\"]",
+      "depth": 0,
+      "include": ["content"],
+      "context": 0
+    },
+    {
+      "address": "body/paragraph[text*=\"Introduction\"]",
+      "depth": 0,
+      "include": ["content"],
+      "context": 0
+    },
+    {
+      "address": "body/table[1]/row[2]",
+      "depth": 1,
+      "include": [],
+      "context": 0
+    }
+  ],
+  "isValid": true
+}
