@@ -43,6 +43,8 @@ public class OfficeTalkLexer
         ["RENAME"] = TokenType.RENAME,
         ["DUPLICATE"] = TokenType.DUPLICATE,
         ["COMMENT"] = TokenType.COMMENT_KW,
+        ["TEXTBOX"] = TokenType.TEXTBOX,
+        ["SHAPE"] = TokenType.SHAPE,
         ["LINK"] = TokenType.LINK,
         ["IMAGE"] = TokenType.IMAGE,
         ["TABLE"] = TokenType.TABLE,

@@ -728,6 +728,61 @@ INSERT LIST AFTER unordered
 Items marked `nested` become children of the preceding non-nested item,
 creating a sub-list.
 
+#### 5.1.10. INSERT TEXTBOX
+
+Creates a floating text box at the specified position and size on the
+addressed slide. This operation is only valid in PowerPoint documents.
+
+```
+AT slide[4]
+INSERT TEXTBOX left=210pt top=420pt width=300pt height=50pt text="hello" align=center
+
+AT slide[1]
+INSERT TEXTBOX width=200pt height=100pt text="Call out box"
+```
+
+Properties are specified as space-separated `key=value` pairs on the same
+line as the INSERT TEXTBOX keyword:
+
+| Property | Type   | Required | Description |
+|----------|--------|----------|-------------|
+| `text`   | string | Yes      | Text content of the text box |
+| `width`  | length | Yes      | Width of the text box (e.g. `300pt`, `4in`) |
+| `height` | length | Yes      | Height of the text box |
+| `left`   | length | No       | Horizontal position from the left edge of the slide |
+| `top`    | length | No       | Vertical position from the top edge of the slide |
+| `align`  | enum   | No       | Text alignment: `left`, `center`, or `right` |
+
+`text`, `width`, and `height` are required. `left` and `top` default to
+implementation-defined positions when omitted.
+
+#### 5.1.11. INSERT SHAPE
+
+Creates a basic drawing shape at the specified position and size on the
+addressed slide. This operation is only valid in PowerPoint documents.
+
+```
+AT slide[2]
+INSERT SHAPE rectangle left=100pt top=200pt width=300pt height=150pt
+
+AT slide[1]
+INSERT SHAPE oval width=100pt height=100pt
+```
+
+The shape type is an unquoted identifier immediately following the SHAPE
+keyword. Properties follow as space-separated `key=value` pairs:
+
+| Property    | Type   | Required | Description |
+|-------------|--------|----------|-------------|
+| shape type  | ident  | Yes      | Shape type (e.g. `rectangle`, `oval`) |
+| `width`     | length | Yes      | Width of the shape |
+| `height`    | length | Yes      | Height of the shape |
+| `left`      | length | No       | Horizontal position from the left edge of the slide |
+| `top`       | length | No       | Vertical position from the top edge of the slide |
+
+Shape type and the `width` and `height` properties are required. `left`
+and `top` default to implementation-defined positions when omitted.
+
 ### 5.2. Formatting Operations
 
 #### 5.2.1. FORMAT
@@ -1918,7 +1973,8 @@ sheet-block      = ("ADD SHEET" / "DELETE SHEET" / "RENAME SHEET") SP quoted-str
 operation-line   = ( set-op / replace-op / insert-op / delete-op
                    / append-op / prepend-op / format-op / style-op
                    / set-runs-op / link-op
-                   / structural-op / comment-op ) LF
+                   / structural-op / comment-op
+                   / textbox-op / shape-op ) LF
 
 ; --- Content Operations ---
 set-op           = "SET" SP ( quoted-string / content-block / cells-clause )
@@ -1947,6 +2003,14 @@ list-type        = "ordered" / "unordered"
 item-line        = "ITEM" SP ( quoted-string / content-block ) [ SP "nested" ]
 
 link-op          = "LINK" SP quoted-string
+
+; --- Textbox and Shape Operations (PowerPoint only) ---
+textbox-op       = "INSERT TEXTBOX" 1*( SP textbox-prop )
+textbox-prop     = ( "text" / "left" / "top" / "width" / "height" / "align" )
+                   "=" prop-value
+
+shape-op         = "INSERT SHAPE" SP identifier 1*( SP shape-prop )
+shape-prop       = ( "left" / "top" / "width" / "height" ) "=" prop-value
 
 ; --- Formatting Operations ---
 format-op        = "FORMAT" SP property-list

@@ -59,6 +59,8 @@ public enum TokenType
     RENAME,
     DUPLICATE,
     COMMENT_KW,
+    TEXTBOX,
+    SHAPE,
 
     // New operation keywords
     LINK,

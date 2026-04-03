@@ -170,6 +170,53 @@ public class RunDefinition
 }
 
 /// <summary>
+/// INSERT TEXTBOX left=… top=… width=… height=… text="…" [align=…]
+/// Creates a floating text box at the specified position and size.
+/// </summary>
+public class InsertTextboxOperation : Operation
+{
+    /// <summary>Required text content of the text box.</summary>
+    public string Text { get; set; } = string.Empty;
+
+    /// <summary>Horizontal position (e.g. "100pt"). Null if not specified.</summary>
+    public string? Left { get; set; }
+
+    /// <summary>Vertical position (e.g. "200pt"). Null if not specified.</summary>
+    public string? Top { get; set; }
+
+    /// <summary>Required width of the text box (e.g. "300pt"). Validated as non-null by SyntacticValidator.</summary>
+    public string? Width { get; set; }
+
+    /// <summary>Required height of the text box (e.g. "50pt"). Validated as non-null by SyntacticValidator.</summary>
+    public string? Height { get; set; }
+
+    /// <summary>Text alignment inside the box: "left", "center", or "right". Null if not specified.</summary>
+    public string? Align { get; set; }
+}
+
+/// <summary>
+/// INSERT SHAPE shapeType left=… top=… width=… height=…
+/// Creates a basic drawing shape (e.g. rectangle, oval) at the specified position and size.
+/// </summary>
+public class InsertShapeOperation : Operation
+{
+    /// <summary>Shape type identifier (e.g. "rectangle", "oval"). Empty string if not specified.</summary>
+    public string ShapeType { get; set; } = string.Empty;
+
+    /// <summary>Horizontal position (e.g. "100pt"). Null if not specified.</summary>
+    public string? Left { get; set; }
+
+    /// <summary>Vertical position (e.g. "200pt"). Null if not specified.</summary>
+    public string? Top { get; set; }
+
+    /// <summary>Required width of the shape (e.g. "300pt"). Validated as non-null by SyntacticValidator.</summary>
+    public string? Width { get; set; }
+
+    /// <summary>Required height of the shape (e.g. "50pt"). Validated as non-null by SyntacticValidator.</summary>
+    public string? Height { get; set; }
+}
+
+/// <summary>
 /// Represents content that can be either an inline string or a content block.
 /// </summary>
 public class ContentValue

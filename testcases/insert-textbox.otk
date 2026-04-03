@@ -1,0 +1,5 @@
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+AT slide[4]
+INSERT TEXTBOX left=210pt top=420pt width=300pt height=50pt text="hello" align=center

@@ -1,0 +1,25 @@
+{
+  "name": "insert-textbox",
+  "description": "INSERT TEXTBOX with position, size, text content, and alignment",
+  "version": "1.0",
+  "docType": "powerpoint",
+  "operationBlocks": [
+    {
+      "address": "slide[4]",
+      "each": false,
+      "operations": [
+        {
+          "type": "INSERT_TEXTBOX",
+          "text": "hello",
+          "left": "210pt",
+          "top": "420pt",
+          "width": "300pt",
+          "height": "50pt",
+          "align": "center"
+        }
+      ]
+    }
+  ],
+  "propertySettings": [],
+  "isValid": true
+}

@@ -1,0 +1,5 @@
+OFFICETALK/1.0
+DOCTYPE powerpoint
+
+AT slide[1]
+INSERT SHAPE width=200pt height=100pt
