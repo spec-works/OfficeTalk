@@ -1,0 +1,5 @@
+OFFICETALK/1.0
+DOCTYPE word
+
+AT body/paragraph[1]
+INSERT TEXTBOX width=200pt height=100pt text="Hello"

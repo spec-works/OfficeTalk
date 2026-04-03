@@ -168,6 +168,13 @@ public class SyntacticValidator
                 break;
 
             case InsertTextboxOperation textbox:
+                if (docType != DocType.PowerPoint)
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidOperation,
+                        "INSERT TEXTBOX is only valid for PowerPoint documents.",
+                        operation.Line));
+                }
                 if (string.IsNullOrEmpty(textbox.Text))
                 {
                     result.Errors.Add(new ValidationDiagnostic(
@@ -192,6 +199,13 @@ public class SyntacticValidator
                 break;
 
             case InsertShapeOperation shape:
+                if (docType != DocType.PowerPoint)
+                {
+                    result.Errors.Add(new ValidationDiagnostic(
+                        ValidationCategory.InvalidOperation,
+                        "INSERT SHAPE is only valid for PowerPoint documents.",
+                        operation.Line));
+                }
                 if (string.IsNullOrEmpty(shape.ShapeType))
                 {
                     result.Errors.Add(new ValidationDiagnostic(
